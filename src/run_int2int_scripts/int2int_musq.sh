@@ -51,4 +51,7 @@ echo "  Model directory: $MODEL_DIR"
 
 mkdir -p "$MODEL_DIR"
 
-python3 ../../Int2Int/train.py --seed 42 --env_base_seed 100 --num_workers 0 --dump_path "`abspath ${MODEL_DIR}`" --exp_name musq --exp_id 1 --train_data "`abspath ${INPUT_DIR}/${TRAIN_FILE}`" --eval_data "`abspath ${INPUT_DIR}/${EVAL_FILE}`" --eval_size 10000 --epoch_size 50000 --operation data --data_types "$DATA_TYPES" --optimizer 'adam_inverse_sqrt,lr=0.00025' --max_epoch 201
+# Use conda environment's Python directly
+PYTHON_BIN="${CONDA_PREFIX:-/home/ziwen/miniconda3/envs/DLNT}/bin/python"
+
+$PYTHON_BIN ../../Int2Int/train.py --seed 42 --env_base_seed 100 --num_workers 0 --dump_path "`abspath ${MODEL_DIR}`" --exp_name musq --exp_id 1 --train_data "`abspath ${INPUT_DIR}/${TRAIN_FILE}`" --eval_data "`abspath ${INPUT_DIR}/${EVAL_FILE}`" --eval_size 10000 --epoch_size 50000 --operation data --data_types "$DATA_TYPES" --optimizer 'adam_inverse_sqrt,lr=0.00025' --max_epoch 201
