@@ -28,9 +28,9 @@ data:
 
 .PHONY: run
 run: data
-	source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING)
-	source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_musq.sh $(ENCODING)
+	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING)"
+	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_musq.sh $(ENCODING)"
 
 .PHONY: run-cpu
 run-cpu: data
-	source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu_cpu.sh $(ENCODING)
+	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu_cpu.sh $(ENCODING)"
