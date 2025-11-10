@@ -27,7 +27,7 @@ usage:
 mobius:
 	make -C ../mobius_code mobius.so
 
-good_data: mobius
+good_data_$(ENCODING): mobius
 	mkdir -p ../../input
 	$(PYTHON) generate_datafiles.py --encoding $(ENCODING) --num_samples $(NUM_SAMPLES) $(if $(SEED),--seed $(SEED))
 	touch good_data_$(ENCODING)
