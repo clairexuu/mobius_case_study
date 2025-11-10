@@ -1,6 +1,8 @@
 ENCODING ?= CRT100_with_stats
 NUM_SAMPLES ?= 1000000
 SEED ?=
+CONDA_ENV ?= DLNT
+SHELL := /bin/bash
 
 .PHONY: usage
 usage:
@@ -26,9 +28,9 @@ data:
 
 .PHONY: run
 run: data
-	bash int2int_mu.sh $(ENCODING)
-	bash int2int_musq.sh $(ENCODING)
+	source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING)
+	source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_musq.sh $(ENCODING)
 
 .PHONY: run-cpu
 run-cpu: data
-	bash int2int_mu_cpu.sh $(ENCODING)
+	source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu_cpu.sh $(ENCODING)
