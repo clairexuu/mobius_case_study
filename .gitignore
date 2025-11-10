@@ -63,8 +63,6 @@ cover/
 
 # Django stuff:
 # *.log
-.sh
-Makefile
 fastdir/
 local_settings.py
 db.sqlite3
