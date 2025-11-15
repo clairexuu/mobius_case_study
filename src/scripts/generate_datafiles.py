@@ -280,6 +280,14 @@ def main():
     mu_filename = os.path.join(encoding_dir, base_mu_filename.replace('.txt', f'_{args.dataset_type}.txt'))
     musq_filename = os.path.join(encoding_dir, base_musq_filename.replace('.txt', f'_{args.dataset_type}.txt'))
 
+    # Check if files already exist
+    if os.path.exists(mu_filename) and os.path.exists(musq_filename):
+        print(f"Data files already exist for {args.encoding} with dataset type {args.dataset_type}:")
+        print(f"  - {mu_filename}")
+        print(f"  - {musq_filename}")
+        print("Skipping generation. Delete these files if you want to regenerate.")
+        return
+
     print(f"Generating {args.num_samples} samples with encoding: {args.encoding}")
     print(f"Dataset type: {args.dataset_type}")
     print(f"Integer range: [{args.min_value}, {args.max_value}]")
