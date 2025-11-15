@@ -42,6 +42,61 @@ def make_line(inputfunc, outputfunc, n):
     return inputfunc(n) + "\t" + outputfunc(n) + "\n"
 
 
+def generate_natural_number(min_val, max_val):
+    """Generate a uniform random number between min_val and max_val."""
+    return random.randint(min_val, max_val)
+
+
+def generate_cheat_number(min_val, max_val, max_attempts=10000):
+    """
+    Generate a number whose prime factors are all within the first 100 primes.
+
+    Strategy: multiply random powers of the first 100 primes until we get a number
+    in the desired range.
+    """
+    for _ in range(max_attempts):
+        n = 1
+        # Randomly select and multiply some of the first 100 primes
+        # Use smaller powers to avoid overflow
+        for p in primes_100:
+            if random.random() < 0.3:  # 30% chance to include each prime
+                power = random.randint(1, max(1, int((max_val ** 0.1) / p)))
+                n *= p ** power
+                if n > max_val:
+                    break
+
+        if min_val <= n <= max_val:
+            return n
+
+    # Fallback: just pick a random number from first 100 primes
+    return random.choice(primes_100)
+
+
+def is_composed_only_of_first_100_primes(n):
+    """Check if n has only prime factors within the first 100 primes."""
+    for p in primes_100:
+        while n % p == 0:
+            n //= p
+    return n == 1
+
+
+def generate_non_cheat_number(min_val, max_val, max_attempts=10000):
+    """
+    Generate a number that has at least one prime factor outside the first 100 primes.
+
+    Strategy: generate random numbers and check if they have a prime factor
+    outside the first 100 primes.
+    """
+    for _ in range(max_attempts):
+        n = random.randint(min_val, max_val)
+        if not is_composed_only_of_first_100_primes(n):
+            return n
+
+    # Fallback: multiply a random number by a prime just outside the first 100
+    # The 101st prime is 547
+    return random.randint(min_val // 547, max_val // 547) * 547
+
+
 # Encoding format implementations
 def make_input_interCRT100(n):
     """
@@ -162,6 +217,13 @@ def main():
         help='Encoding format for input data'
     )
     parser.add_argument(
+        '--dataset_type',
+        type=str,
+        default='natural',
+        choices=['natural', 'cheat', 'non_cheat'],
+        help='Dataset type: natural (uniform random), cheat (only first 100 prime factors), non_cheat (at least one prime factor outside first 100)'
+    )
+    parser.add_argument(
         '--num_samples',
         type=int,
         default=1000000,
@@ -199,18 +261,31 @@ def main():
         random.seed(args.seed)
         print(f"Random seed set to: {args.seed}")
 
-    # Create encoding-specific subdirectory
-    encoding_dir = os.path.join(args.output_dir, f"input_dir_{args.encoding}")
+    # Select number generator based on dataset type
+    if args.dataset_type == 'natural':
+        generate_number = lambda: generate_natural_number(args.min_value, args.max_value)
+    elif args.dataset_type == 'cheat':
+        generate_number = lambda: generate_cheat_number(args.min_value, args.max_value)
+    elif args.dataset_type == 'non_cheat':
+        generate_number = lambda: generate_non_cheat_number(args.min_value, args.max_value)
+
+    # Create encoding-specific subdirectory with dataset type
+    encoding_dir = os.path.join(args.output_dir, f"input_dir_{args.encoding}_{args.dataset_type}")
     os.makedirs(encoding_dir, exist_ok=True)
 
     # Get encoding function
     input_encoder = ENCODING_FORMATS[args.encoding]
 
-    # Generate filenames
-    mu_filename = os.path.join(encoding_dir, get_output_filename(args.encoding, "mu"))
-    musq_filename = os.path.join(encoding_dir, get_output_filename(args.encoding, "musq"))
+    # Generate filenames with dataset type suffix
+    base_mu_filename = get_output_filename(args.encoding, "mu")
+    base_musq_filename = get_output_filename(args.encoding, "musq")
+
+    # Add dataset type to filename (before .txt extension)
+    mu_filename = os.path.join(encoding_dir, base_mu_filename.replace('.txt', f'_{args.dataset_type}.txt'))
+    musq_filename = os.path.join(encoding_dir, base_musq_filename.replace('.txt', f'_{args.dataset_type}.txt'))
 
     print(f"Generating {args.num_samples} samples with encoding: {args.encoding}")
+    print(f"Dataset type: {args.dataset_type}")
     print(f"Integer range: [{args.min_value}, {args.max_value}]")
     print(f"Output files:")
     print(f"  - {mu_filename}")
@@ -222,7 +297,7 @@ def main():
         open(musq_filename, "w", encoding="utf8") as musqfile,
     ):
         while len(seen) < args.num_samples:
-            n = random.randint(args.min_value, args.max_value)
+            n = generate_number()
             if n in seen:
                 continue
             seen.add(n)

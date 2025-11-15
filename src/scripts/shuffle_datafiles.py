@@ -42,6 +42,13 @@ def main():
         help='Encoding format (must match the format used in generate_datafiles.py)'
     )
     parser.add_argument(
+        '--dataset_type',
+        type=str,
+        default='natural',
+        choices=['natural', 'cheat', 'non_cheat'],
+        help='Dataset type: natural (for train/test split), cheat (test only), non_cheat (test only)'
+    )
+    parser.add_argument(
         '--input_dir',
         type=str,
         default='../../input/',
@@ -51,7 +58,7 @@ def main():
         '--ntrain',
         type=int,
         default=900000,
-        help='Number of training samples'
+        help='Number of training samples (only used for natural dataset)'
     )
     parser.add_argument(
         '--ntest',
@@ -62,36 +69,68 @@ def main():
 
     args = parser.parse_args()
 
-    # Create encoding-specific subdirectory
-    encoding_dir = os.path.join(args.input_dir, f"input_dir_{args.encoding}")
+    # Create encoding-specific subdirectory with dataset type
+    encoding_dir = os.path.join(args.input_dir, f"input_dir_{args.encoding}_{args.dataset_type}")
     os.makedirs(encoding_dir, exist_ok=True)
 
-    # Generate filenames based on encoding
-    # Keep legacy filenames for interCRT100 (backward compatibility)
-    if args.encoding == 'interCRT100':
-        mu_filename = os.path.join(encoding_dir, "mu_modp_and_p.txt")
-        musq_filename = os.path.join(encoding_dir, "musq_modp_and_p.txt")
-    else:
-        mu_filename = os.path.join(encoding_dir, f"mu_{args.encoding}.txt")
-        musq_filename = os.path.join(encoding_dir, f"musq_{args.encoding}.txt")
+    # Generate filenames based on encoding and dataset type
+    base_mu = f"mu_{args.encoding}.txt"
+    base_musq = f"musq_{args.encoding}.txt"
+
+    # Add dataset type suffix
+    mu_filename = os.path.join(encoding_dir, base_mu.replace('.txt', f'_{args.dataset_type}.txt'))
+    musq_filename = os.path.join(encoding_dir, base_musq.replace('.txt', f'_{args.dataset_type}.txt'))
 
     print(f"Shuffling and splitting data with encoding: {args.encoding}")
-    print(f"  Training samples: {args.ntrain}")
-    print(f"  Test samples: {args.ntest}")
+    print(f"Dataset type: {args.dataset_type}")
 
-    # Process mu files
-    if os.path.exists(mu_filename):
-        print(f"\nProcessing: {mu_filename}")
-        shuffle_and_create(mu_filename, args.ntrain, args.ntest)
-    else:
-        print(f"Warning: {mu_filename} not found!")
+    if args.dataset_type == 'natural':
+        # Natural dataset: create train/test split
+        print(f"  Training samples: {args.ntrain}")
+        print(f"  Test samples: {args.ntest}")
 
-    # Process musq files
-    if os.path.exists(musq_filename):
-        print(f"\nProcessing: {musq_filename}")
-        shuffle_and_create(musq_filename, args.ntrain, args.ntest)
+        # Process mu files
+        if os.path.exists(mu_filename):
+            print(f"\nProcessing: {mu_filename}")
+            shuffle_and_create(mu_filename, args.ntrain, args.ntest)
+        else:
+            print(f"Warning: {mu_filename} not found!")
+
+        # Process musq files
+        if os.path.exists(musq_filename):
+            print(f"\nProcessing: {musq_filename}")
+            shuffle_and_create(musq_filename, args.ntrain, args.ntest)
+        else:
+            print(f"Warning: {musq_filename} not found!")
     else:
-        print(f"Warning: {musq_filename} not found!")
+        # Cheat and non_cheat datasets: only create test files (no train/test split)
+        print(f"  Test samples: {args.ntest}")
+        print("  Note: cheat and non_cheat datasets are used only for testing")
+
+        # Process mu files - just shuffle and use as test
+        if os.path.exists(mu_filename):
+            print(f"\nProcessing: {mu_filename}")
+            # Create test-only files by shuffling and taking ntest samples
+            name = mu_filename[:-4]  # remove ".txt"
+            print("shuffling...")
+            os.system(f"shuf {mu_filename} > {name}.shuf.txt")
+            print("making testing data...")
+            os.system(f"head -n {args.ntest} {name}.shuf.txt > {name}.txt.test")
+            print("done!")
+        else:
+            print(f"Warning: {mu_filename} not found!")
+
+        # Process musq files
+        if os.path.exists(musq_filename):
+            print(f"\nProcessing: {musq_filename}")
+            name = musq_filename[:-4]  # remove ".txt"
+            print("shuffling...")
+            os.system(f"shuf {musq_filename} > {name}.shuf.txt")
+            print("making testing data...")
+            os.system(f"head -n {args.ntest} {name}.shuf.txt > {name}.txt.test")
+            print("done!")
+        else:
+            print(f"Warning: {musq_filename} not found!")
 
     print("\nDone!")
 
