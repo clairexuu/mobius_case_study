@@ -198,11 +198,7 @@ def get_output_filename(encoding_format, task):
     """
     Generate output filename based on encoding format and task.
     """
-    # Keep legacy filenames for interCRT100 (backward compatibility)
-    if encoding_format == 'interCRT100':
-        return f"{task}_modp_and_p.txt"
-    else:
-        return f"{task}_{encoding_format}.txt"
+    return f"{task}_{encoding_format}.txt"
 
 
 def main():

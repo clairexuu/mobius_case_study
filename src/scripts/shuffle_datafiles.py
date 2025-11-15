@@ -74,12 +74,12 @@ def main():
     os.makedirs(encoding_dir, exist_ok=True)
 
     # Generate filenames based on encoding and dataset type
-    base_mu = f"mu_{args.encoding}.txt"
-    base_musq = f"musq_{args.encoding}.txt"
+    base_mu = f"mu_{args.encoding}"
+    base_musq = f"musq_{args.encoding}"
 
     # Add dataset type suffix
-    mu_filename = os.path.join(encoding_dir, base_mu.replace('.txt', f'_{args.dataset_type}.txt'))
-    musq_filename = os.path.join(encoding_dir, base_musq.replace('.txt', f'_{args.dataset_type}.txt'))
+    mu_filename = os.path.join(encoding_dir, f"{base_mu}_{args.dataset_type}.txt")
+    musq_filename = os.path.join(encoding_dir, f"{base_musq}_{args.dataset_type}.txt")
 
     print(f"Shuffling and splitting data with encoding: {args.encoding}")
     print(f"Dataset type: {args.dataset_type}")

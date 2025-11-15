@@ -1,0 +1,28 @@
+# Core dependencies for PyTorch-based training
+torch>=1.7.0
+numpy>=1.19.0
+
+# Data processing and utilities
+argparse
+
+# Python standard library (included with Python, listed for documentation)
+# random
+# os
+# sys
+# logging
+# pickle
+# json
+# ctypes
+# collections
+# functools
+# signal
+# subprocess
+# socket
+# time
+# re
+# math
+# io
+# inspect
+# getpass
+# errno
+# unittest

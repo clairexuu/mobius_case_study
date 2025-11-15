@@ -18,33 +18,35 @@ function abspath {
 
 # Parse encoding parameter (default: interCRT100)
 ENCODING=${1:-interCRT100}
+DATASET_TYPE=${2:-natural}
 
 # Set encoding-specific parameters
 if [ "$ENCODING" = "interCRT100" ]; then
     DATA_TYPES='int[200]:range(-1,2)'
-    TRAIN_FILE="mu_modp_and_p.txt.train"
-    EVAL_FILE="mu_modp_and_p.txt.test"
+    BASE_FILENAME="mu_interCRT100"
 elif [ "$ENCODING" = "CRT100" ]; then
     DATA_TYPES='int[100]:range(-1,2)'
-    TRAIN_FILE="mu_CRT100.txt.train"
-    EVAL_FILE="mu_CRT100.txt.test"
+    BASE_FILENAME="mu_CRT100"
 elif [ "$ENCODING" = "interCRT100_with_n" ]; then
     DATA_TYPES='int[201]:range(-1,2)'
-    TRAIN_FILE="mu_interCRT100_with_n.txt.train"
-    EVAL_FILE="mu_interCRT100_with_n.txt.test"
+    BASE_FILENAME="mu_interCRT100_with_n"
 elif [ "$ENCODING" = "CRT100_with_stats" ]; then
     DATA_TYPES='int[103]:range(-1,2)'
-    TRAIN_FILE="mu_CRT100_with_stats.txt.train"
-    EVAL_FILE="mu_CRT100_with_stats.txt.test"
+    BASE_FILENAME="mu_CRT100_with_stats"
 else
     echo "Unknown encoding: $ENCODING"
     exit 1
 fi
 
-INPUT_DIR="../../input/input_dir_${ENCODING}"
-MODEL_DIR="../../models/model_${ENCODING}"
+# Construct filenames with dataset type
+TRAIN_FILE="${BASE_FILENAME}_${DATASET_TYPE}.txt.train"
+EVAL_FILE="${BASE_FILENAME}_${DATASET_TYPE}.txt.test"
+
+INPUT_DIR="../../input/input_dir_${ENCODING}_${DATASET_TYPE}"
+MODEL_DIR="../../models/model_${ENCODING}_${DATASET_TYPE}"
 
 echo "Training with encoding: $ENCODING"
+echo "  Dataset type: $DATASET_TYPE"
 echo "  Data types: $DATA_TYPES"
 echo "  Input directory: $INPUT_DIR"
 echo "  Model directory: $MODEL_DIR"
