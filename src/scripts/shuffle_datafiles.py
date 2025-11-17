@@ -28,6 +28,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import argparse
 import os
+
+try:
+    from tqdm import tqdm
+    HAS_TQDM = True
+except ImportError:
+    HAS_TQDM = False
+
 from utils import shuffle_and_create
 
 

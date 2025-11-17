@@ -131,17 +131,70 @@ def wheel_mobius(n):
 def shuffle_and_create(fname, ntrain=900_000, ntest=100_000):
     """
     Shuffle a datafile and separate into separate testing and training files.
-
-    NOTE: This assumes the context is a linux shell with GNU Core utilities,
-    in particular `shuf` and `head` and `tail`.
+    Uses pure Python with tqdm for progress bars.
     """
+    import random
+
+    try:
+        from tqdm import tqdm
+        has_tqdm = True
+    except ImportError:
+        has_tqdm = False
+
     if not fname.endswith(".txt"):
         raise ValueError("Incorrect filename assumption.")
     name = fname[:-4]  # remove ".txt"
-    print("shuffling...")
-    os.system(f"shuf {name}.txt > {name}.shuf.txt")
-    print("making training data...")
-    os.system(f"head -n {ntrain} {name}.shuf.txt > {name}.txt.train")
-    print("making testing data...")
-    os.system(f"tail -n {ntest} {name}.shuf.txt > {name}.txt.test")
-    print("done!")
+
+    # Read all lines
+    print("Reading data...")
+    with open(f"{name}.txt", 'r') as f:
+        if has_tqdm:
+            # Count lines first for progress bar
+            print("Counting lines...")
+            num_lines = sum(1 for _ in f)
+            f.seek(0)
+            lines = list(tqdm(f, total=num_lines, desc="Loading lines", unit="lines"))
+        else:
+            lines = f.readlines()
+            print(f"  Loaded {len(lines):,} lines")
+
+    # Shuffle
+    print("Shuffling...")
+    if has_tqdm:
+        random.shuffle(lines)
+        print(f"  Shuffled {len(lines):,} lines")
+    else:
+        random.shuffle(lines)
+        print(f"  Shuffled {len(lines):,} lines")
+
+    # Write shuffled file
+    print("Writing shuffled data...")
+    with open(f"{name}.shuf.txt", 'w') as f:
+        if has_tqdm:
+            for line in tqdm(lines, desc="Writing shuffled", unit="lines"):
+                f.write(line)
+        else:
+            f.writelines(lines)
+            print(f"  Wrote {len(lines):,} lines")
+
+    # Write training data
+    print("Making training data...")
+    with open(f"{name}.txt.train", 'w') as f:
+        if has_tqdm:
+            for line in tqdm(lines[:ntrain], desc="Writing train", unit="lines"):
+                f.write(line)
+        else:
+            f.writelines(lines[:ntrain])
+            print(f"  Wrote {ntrain:,} training samples")
+
+    # Write testing data
+    print("Making testing data...")
+    with open(f"{name}.txt.test", 'w') as f:
+        if has_tqdm:
+            for line in tqdm(lines[-ntest:], desc="Writing test", unit="lines"):
+                f.write(line)
+        else:
+            f.writelines(lines[-ntest:])
+            print(f"  Wrote {ntest:,} testing samples")
+
+    print("Done!")
