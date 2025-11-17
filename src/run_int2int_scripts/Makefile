@@ -1,7 +1,7 @@
 ENCODING ?= interCRT100_with_n
 DATASET_TYPE ?= natural
 NUM_SAMPLES ?= 1000000
-SEED ?=
+SEED ?= 42
 CONDA_ENV ?= DLNT
 SHELL := /bin/bash
 
@@ -36,7 +36,7 @@ data:
 
 .PHONY: data_all
 data_all:
-	make -C ../scripts/ all_datasets ENCODING=$(ENCODING) NUM_SAMPLES=$(NUM_SAMPLES) $(if $(SEED),SEED=$(SEED))
+	make -C ../scripts/ other_datasets ENCODING=$(ENCODING) NUM_SAMPLES=$(NUM_SAMPLES) $(if $(SEED),SEED=$(SEED))
 	make -C ../scripts/ shuffle_all ENCODING=$(ENCODING)
 
 .PHONY: run

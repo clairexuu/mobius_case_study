@@ -2,7 +2,7 @@ PYTHON = python3
 ENCODING ?= interCRT100
 DATASET_TYPE ?= natural
 NUM_SAMPLES ?= 1000000
-SEED ?=
+SEED ?= 42
 
 .PHONY: usage
 usage:
@@ -45,10 +45,9 @@ good_data_$(ENCODING)_$(DATASET_TYPE): mobius
 .PHONY: good_data
 good_data: good_data_$(ENCODING)_$(DATASET_TYPE)
 
-.PHONY: all_datasets
-all_datasets: mobius
-	@echo "Generating all three dataset types..."
-	$(MAKE) good_data DATASET_TYPE=natural
+.PHONY: other_datasets
+other_datasets: mobius
+	@echo "Generating cheat and non_cheat dataset types..."
 	$(MAKE) good_data DATASET_TYPE=cheat NUM_SAMPLES=100000
 	$(MAKE) good_data DATASET_TYPE=non_cheat NUM_SAMPLES=100000
 
@@ -63,8 +62,7 @@ shuffle: good_data_$(ENCODING)_$(DATASET_TYPE)
 
 .PHONY: shuffle_all
 shuffle_all:
-	@echo "Shuffling all three dataset types..."
-	$(MAKE) shuffle DATASET_TYPE=natural
+	@echo "Shuffling cheat and non_cheat dataset types..."
 	$(MAKE) shuffle DATASET_TYPE=cheat
 	$(MAKE) shuffle DATASET_TYPE=non_cheat
 

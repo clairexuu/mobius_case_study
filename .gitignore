@@ -4,6 +4,9 @@ Int2Int/
 # input files
 input/
 
+# test logs
+test_results/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -157,3 +160,9 @@ src/scripts/good_data_interCRT100_natural
 src/scripts/good_data_interCRT100_with_n_natural
 src/scripts/shuffle_interCRT100_natural
 src/scripts/shuffle_interCRT100_with_n_natural
+src/scripts/good_data_interCRT100_cheat
+src/scripts/good_data_interCRT100_non_cheat
+src/scripts/good_data_interCRT100_with_n_cheat
+src/scripts/good_data_interCRT100_with_n_non_cheat
+src/scripts/shuffle_interCRT100_cheat
+src/scripts/shuffle_interCRT100_non_cheat
