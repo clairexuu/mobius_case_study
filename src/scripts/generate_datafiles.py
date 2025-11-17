@@ -34,6 +34,12 @@ import random
 import argparse
 import os
 
+try:
+    from tqdm import tqdm
+    HAS_TQDM = True
+except ImportError:
+    HAS_TQDM = False
+    print("Note: Install tqdm for progress bar support: pip install tqdm")
 
 from utils import dldmobius, encode_integer, primes_100
 
@@ -350,19 +356,34 @@ def main():
         open(mu_filename, "w", encoding="utf8") as mufile,
         open(musq_filename, "w", encoding="utf8") as musqfile,
     ):
-        while len(seen) < args.num_samples:
-            n = generate_number()
-            if n in seen:
-                continue
-            seen.add(n)
-            mufile.write(make_line(input_encoder, make_output_mu, n))
-            musqfile.write(make_line(input_encoder, make_output_musq, n))
+        if HAS_TQDM:
+            # Use tqdm progress bar
+            pbar = tqdm(total=args.num_samples, desc="Generating samples", unit="samples")
+            while len(seen) < args.num_samples:
+                n = generate_number()
+                if n in seen:
+                    continue
+                seen.add(n)
+                mufile.write(make_line(input_encoder, make_output_mu, n))
+                musqfile.write(make_line(input_encoder, make_output_musq, n))
+                pbar.update(1)
+            pbar.close()
+        else:
+            # Fallback to simple progress messages
+            while len(seen) < args.num_samples:
+                n = generate_number()
+                if n in seen:
+                    continue
+                seen.add(n)
+                mufile.write(make_line(input_encoder, make_output_mu, n))
+                musqfile.write(make_line(input_encoder, make_output_musq, n))
 
-            # Progress indicator
-            if len(seen) % 100000 == 0:
-                print(f"  Generated {len(seen):,} samples...")
+                # Progress indicator every 10,000 samples
+                if len(seen) % 10000 == 0:
+                    progress = 100 * len(seen) / args.num_samples
+                    print(f"  Progress: {len(seen):,}/{args.num_samples:,} ({progress:.1f}%)")
 
-    print(f"Done! Generated {args.num_samples:,} samples.")
+    print(f"\nDone! Generated {args.num_samples:,} samples.")
     print(f"\nEncoding format details ({args.encoding}):")
     if args.encoding == 'interCRT100':
         print("  Format: [n mod p₁, p₁, n mod p₂, p₂, ..., n mod p₁₀₀, p₁₀₀]")
