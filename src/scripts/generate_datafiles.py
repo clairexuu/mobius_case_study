@@ -47,29 +47,79 @@ def generate_natural_number(min_val, max_val):
     return random.randint(min_val, max_val)
 
 
-def generate_cheat_number(min_val, max_val, max_attempts=10000):
+def generate_cheat_number(min_val, max_val):
     """
-    Generate a number whose prime factors are all within the first 100 primes.
+    OPTIMIZED: Generate a number whose prime factors are all within the first 100 primes.
 
-    Strategy: multiply random powers of the first 100 primes until we get a number
-    in the desired range.
+    Strategy: Use logarithms to control the size more precisely.
+    We target a specific log value and build the number incrementally.
     """
-    for _ in range(max_attempts):
-        n = 1
-        # Randomly select and multiply some of the first 100 primes
-        # Use smaller powers to avoid overflow
-        for p in primes_100:
-            if random.random() < 0.3:  # 30% chance to include each prime
-                power = random.randint(1, max(1, int((max_val ** 0.1) / p)))
+    import math
+
+    # Target log range
+    log_min = math.log(max(min_val, 2))
+    log_max = math.log(max_val)
+
+    # Pick a target log value
+    target_log = random.uniform(log_min, log_max)
+
+    # Build number by selecting primes and powers
+    n = 1
+    current_log = 0.0
+    log_primes = [math.log(p) for p in primes_100]
+
+    # Shuffle primes for randomness
+    indices = list(range(len(primes_100)))
+    random.shuffle(indices)
+
+    # Add primes until we reach close to target
+    for idx in indices:
+        p = primes_100[idx]
+        log_p = log_primes[idx]
+
+        if current_log >= target_log:
+            break
+
+        # Calculate how many times we can use this prime
+        remaining_log = target_log - current_log
+        max_power = int(remaining_log / log_p)
+
+        if max_power >= 1:
+            # Use this prime with probability that decreases with size
+            if random.random() < 0.5:  # 50% chance to use each applicable prime
+                power = random.randint(1, min(max_power, 5))  # Limit to reasonable powers
                 n *= p ** power
-                if n > max_val:
-                    break
+                current_log += power * log_p
 
-        if min_val <= n <= max_val:
-            return n
+    # Ensure n is in range
+    if n < min_val:
+        # Multiply by a small random product of primes
+        while n < min_val and n < max_val // primes_100[0]:
+            p = random.choice(primes_100[:10])  # Use smaller primes
+            if n * p <= max_val:
+                n *= p
+            else:
+                break
 
-    # Fallback: just pick a random number from first 100 primes
-    return random.choice(primes_100)
+    if n > max_val:
+        # Divide by random prime factors until in range
+        for p in primes_100:
+            while n > max_val and n % p == 0:
+                n //= p
+
+    # Final check
+    if min_val <= n <= max_val:
+        return n
+
+    # Fallback: generate a simple product
+    n = 1
+    for p in random.sample(primes_100[:20], k=random.randint(3, 8)):
+        n *= p
+        if n > max_val:
+            n //= p
+            break
+
+    return max(min_val, min(n, max_val))
 
 
 def is_composed_only_of_first_100_primes(n):
