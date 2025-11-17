@@ -151,3 +151,9 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 models/train_CRT100stat/train.log
+src/run_int2int_scripts/cuda-keyring_1.1-1_all.deb
+src/run_int2int_scripts/test
+src/scripts/good_data_interCRT100_natural
+src/scripts/good_data_interCRT100_with_n_natural
+src/scripts/shuffle_interCRT100_natural
+src/scripts/shuffle_interCRT100_with_n_natural

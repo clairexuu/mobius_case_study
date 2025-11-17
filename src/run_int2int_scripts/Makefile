@@ -1,4 +1,4 @@
-ENCODING ?= CRT100_with_stats
+ENCODING ?= interCRT100_with_n
 DATASET_TYPE ?= natural
 NUM_SAMPLES ?= 1000000
 SEED ?=
