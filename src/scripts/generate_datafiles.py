@@ -55,10 +55,10 @@ def generate_natural_number(min_val, max_val):
 
 def generate_cheat_number(min_val, max_val):
     """
-    OPTIMIZED: Generate a number whose prime factors are all within the first 100 primes.
+    Generate a number whose prime factors are all within the first 100 primes.
 
-    Strategy: Use logarithms to control the size more precisely.
-    We target a specific log value and build the number incrementally.
+    Use logarithms to control the size more precisely.
+    Target a specific log value and build the number incrementally.
     """
     import math
 
