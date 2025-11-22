@@ -44,6 +44,12 @@ data_all:
 train:
 	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING) $(DATASET_TYPE)"
 
+.PHONY: train_all
+train_all:
+	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING) natural"
+	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING) cheat"
+	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING) non_cheat"
+
 .PHONY: run-cpu
 run-cpu: data
 	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu_cpu.sh $(ENCODING) $(DATASET_TYPE)"
