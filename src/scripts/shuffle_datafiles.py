@@ -91,53 +91,23 @@ def main():
     print(f"Shuffling and splitting data with encoding: {args.encoding}")
     print(f"Dataset type: {args.dataset_type}")
 
-    if args.dataset_type == 'natural':
-        # Natural dataset: create train/test split
-        print(f"  Training samples: {args.ntrain}")
-        print(f"  Test samples: {args.ntest}")
+    # All dataset types: create train/test split
+    print(f"  Training samples: {args.ntrain}")
+    print(f"  Test samples: {args.ntest}")
 
-        # Process mu files
-        if os.path.exists(mu_filename):
-            print(f"\nProcessing: {mu_filename}")
-            shuffle_and_create(mu_filename, args.ntrain, args.ntest)
-        else:
-            print(f"Warning: {mu_filename} not found!")
-
-        # Process musq files
-        if os.path.exists(musq_filename):
-            print(f"\nProcessing: {musq_filename}")
-            shuffle_and_create(musq_filename, args.ntrain, args.ntest)
-        else:
-            print(f"Warning: {musq_filename} not found!")
+    # Process mu files
+    if os.path.exists(mu_filename):
+        print(f"\nProcessing: {mu_filename}")
+        shuffle_and_create(mu_filename, args.ntrain, args.ntest)
     else:
-        # Cheat and non_cheat datasets: only create test files (no train/test split)
-        print(f"  Test samples: {args.ntest}")
-        print("  Note: cheat and non_cheat datasets are used only for testing")
+        print(f"Warning: {mu_filename} not found!")
 
-        # Process mu files - just shuffle and use as test
-        if os.path.exists(mu_filename):
-            print(f"\nProcessing: {mu_filename}")
-            # Create test-only files by shuffling and taking ntest samples
-            name = mu_filename[:-4]  # remove ".txt"
-            print("shuffling...")
-            os.system(f"shuf {mu_filename} > {name}.shuf.txt")
-            print("making testing data...")
-            os.system(f"head -n {args.ntest} {name}.shuf.txt > {name}.txt.test")
-            print("done!")
-        else:
-            print(f"Warning: {mu_filename} not found!")
-
-        # Process musq files
-        if os.path.exists(musq_filename):
-            print(f"\nProcessing: {musq_filename}")
-            name = musq_filename[:-4]  # remove ".txt"
-            print("shuffling...")
-            os.system(f"shuf {musq_filename} > {name}.shuf.txt")
-            print("making testing data...")
-            os.system(f"head -n {args.ntest} {name}.shuf.txt > {name}.txt.test")
-            print("done!")
-        else:
-            print(f"Warning: {musq_filename} not found!")
+    # Process musq files
+    if os.path.exists(musq_filename):
+        print(f"\nProcessing: {musq_filename}")
+        shuffle_and_create(musq_filename, args.ntrain, args.ntest)
+    else:
+        print(f"Warning: {musq_filename} not found!")
 
     print("\nDone!")
 

@@ -45,12 +45,6 @@ good_data_$(ENCODING)_$(DATASET_TYPE): mobius
 .PHONY: good_data
 good_data: good_data_$(ENCODING)_$(DATASET_TYPE)
 
-.PHONY: other_datasets
-other_datasets: mobius
-	@echo "Generating cheat and non_cheat dataset types..."
-	$(MAKE) good_data DATASET_TYPE=cheat NUM_SAMPLES=100000
-	$(MAKE) good_data DATASET_TYPE=non_cheat NUM_SAMPLES=100000
-
 corrupted_data: mobius
 	mkdir -p ../../input
 	$(PYTHON) generate_corrupted_datafiles.py
@@ -59,12 +53,6 @@ corrupted_data: mobius
 shuffle: good_data_$(ENCODING)_$(DATASET_TYPE)
 	$(PYTHON) shuffle_datafiles.py --encoding $(ENCODING) --dataset_type $(DATASET_TYPE)
 	touch shuffle_$(ENCODING)_$(DATASET_TYPE)
-
-.PHONY: shuffle_all
-shuffle_all:
-	@echo "Shuffling cheat and non_cheat dataset types..."
-	$(MAKE) shuffle DATASET_TYPE=cheat
-	$(MAKE) shuffle DATASET_TYPE=non_cheat
 
 .PHONY: clean
 clean:

@@ -36,13 +36,13 @@ data:
 
 .PHONY: data_all
 data_all:
-	make -C ../scripts/ other_datasets ENCODING=$(ENCODING) NUM_SAMPLES=$(NUM_SAMPLES) $(if $(SEED),SEED=$(SEED))
-	make -C ../scripts/ shuffle_all ENCODING=$(ENCODING)
+	make -C ../scripts/ shuffle ENCODING=$(ENCODING) DATASET_TYPE=natural NUM_SAMPLES=$(NUM_SAMPLES) $(if $(SEED),SEED=$(SEED))
+	make -C ../scripts/ shuffle ENCODING=$(ENCODING) DATASET_TYPE=cheat NUM_SAMPLES=$(NUM_SAMPLES) $(if $(SEED),SEED=$(SEED))
+	make -C ../scripts/ shuffle ENCODING=$(ENCODING) DATASET_TYPE=non_cheat NUM_SAMPLES=$(NUM_SAMPLES) $(if $(SEED),SEED=$(SEED))
 
-.PHONY: run
-run: data
+.PHONY: train
+train:
 	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING) $(DATASET_TYPE)"
-	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_musq.sh $(ENCODING) $(DATASET_TYPE)"
 
 .PHONY: run-cpu
 run-cpu: data
