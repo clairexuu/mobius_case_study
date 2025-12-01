@@ -128,6 +128,101 @@ def wheel_mobius(n):
     return ret
 
 
+def is_squarefree(n):
+    """
+    Check if n is square-free (no prime factor appears more than once).
+    Returns 1 if square-free, 0 otherwise.
+    This is equivalent to checking if μ²(n) = 1.
+    """
+    if n < 1:
+        return 0
+    if n == 1:
+        return 1
+
+    # Check for repeated factor of 2
+    if n % 2 == 0:
+        n //= 2
+        if n % 2 == 0:
+            return 0
+
+    # Check for repeated factor of 3
+    if n % 3 == 0:
+        n //= 3
+        if n % 3 == 0:
+            return 0
+
+    # Check for repeated factor of 5
+    if n % 5 == 0:
+        n //= 5
+        if n % 5 == 0:
+            return 0
+
+    # Use wheel factorization for remaining primes
+    incs = [4, 2, 4, 2, 4, 6, 2, 6]
+    p = 7
+    i = 0
+    limit = int(n**0.5 + 1)
+
+    while p <= limit:
+        if n % p == 0:
+            n //= p
+            limit = int(n**0.5 + 1)
+            if n % p == 0:  # Repeated factor found
+                return 0
+        p += incs[i]
+        i = (i + 1) % len(incs)
+
+    return 1
+
+
+def liouville(n):
+    """
+    Liouville function λ(n).
+    Returns (-1)^Ω(n) where Ω(n) is the number of prime factors with multiplicity.
+    λ(n) = 1 if Ω(n) is even, -1 if Ω(n) is odd.
+    """
+    if n < 1:
+        return 0
+    if n == 1:
+        return 1
+
+    omega = 0  # count prime factors with multiplicity
+
+    # Factor out 2s
+    while n % 2 == 0:
+        omega += 1
+        n //= 2
+
+    # Factor out 3s
+    while n % 3 == 0:
+        omega += 1
+        n //= 3
+
+    # Factor out 5s
+    while n % 5 == 0:
+        omega += 1
+        n //= 5
+
+    # Check remaining primes using wheel
+    incs = [4, 2, 4, 2, 4, 6, 2, 6]
+    p = 7
+    i = 0
+    limit = int(n**0.5 + 1)
+
+    while p <= limit:
+        while n % p == 0:
+            omega += 1
+            n //= p
+            limit = int(n**0.5 + 1)
+        p += incs[i]
+        i = (i + 1) % len(incs)
+
+    if n > 1:
+        omega += 1
+
+    return 1 if omega % 2 == 0 else -1
+
+
 def shuffle_and_create(fname, ntrain=900_000, ntest=100_000):
     """
     Shuffle a datafile and separate into separate testing and training files.

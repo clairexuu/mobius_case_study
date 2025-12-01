@@ -33,6 +33,9 @@ elif [ "$ENCODING" = "interCRT100_with_n" ]; then
 elif [ "$ENCODING" = "CRT100_with_stats" ]; then
     DATA_TYPES='int[103]:range(-1,2)'
     BASE_FILENAME="mu_CRT100_with_stats"
+elif [ "$ENCODING" = "n_interCRT_sqfree_mobius" ]; then
+    DATA_TYPES='int[203]:range(-1,2)'
+    BASE_FILENAME="mu_n_interCRT_sqfree_mobius"
 else
     echo "Unknown encoding: $ENCODING"
     exit 1
