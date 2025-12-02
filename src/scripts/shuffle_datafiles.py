@@ -82,11 +82,11 @@ def main():
 
     # Generate filenames based on encoding and dataset type
     base_mu = f"mu_{args.encoding}"
-    base_musq = f"musq_{args.encoding}"
+    # base_musq = f"musq_{args.encoding}"  # Disabled for now
 
     # Add dataset type suffix
     mu_filename = os.path.join(encoding_dir, f"{base_mu}_{args.dataset_type}.txt")
-    musq_filename = os.path.join(encoding_dir, f"{base_musq}_{args.dataset_type}.txt")
+    # musq_filename = os.path.join(encoding_dir, f"{base_musq}_{args.dataset_type}.txt")  # Disabled for now
 
     print(f"Shuffling and splitting data with encoding: {args.encoding}")
     print(f"Dataset type: {args.dataset_type}")
@@ -102,12 +102,12 @@ def main():
     else:
         print(f"Warning: {mu_filename} not found!")
 
-    # Process musq files
-    if os.path.exists(musq_filename):
-        print(f"\nProcessing: {musq_filename}")
-        shuffle_and_create(musq_filename, args.ntrain, args.ntest)
-    else:
-        print(f"Warning: {musq_filename} not found!")
+    # Process musq files - Disabled for now
+    # if os.path.exists(musq_filename):
+    #     print(f"\nProcessing: {musq_filename}")
+    #     shuffle_and_create(musq_filename, args.ntrain, args.ntest)
+    # else:
+    #     print(f"Warning: {musq_filename} not found!")
 
     print("\nDone!")
 

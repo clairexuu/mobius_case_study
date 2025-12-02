@@ -233,35 +233,32 @@ def make_input_CRT100_with_stats(n):
     return ' '.join(ret)
 
 
-def make_input_n_interCRT_sqfree_mobius(n):
+def make_input_interCRT_sqfree_mobius(n):
     """
-    New encoding format: [number | interleaving CRT | square free flag | mobius]
-    Format: [n, n mod p1, p1, n mod p2, p2, ..., n mod p100, p100, sqfree_flag, μ(n)]
-    where sqfree_flag = 1 if n is square-free, 0 otherwise
+    New encoding format: [interleaving CRT | square free flag | mobius]
+    Format: [n mod p1, p1, n mod p2, p2, ..., n mod p100, p100, sqfree_flag, μ(n)]
+    where sqfree_flag = 1 if n is square-free, 0 otherwise (computed as μ²(n))
           μ(n) = Möbius function value ∈ {-1, 0, 1}
 
-    Vector length: 1 (n) + 200 (interleaved CRT) + 1 (sqfree) + 1 (mobius) = 203
+    Vector length: 200 (interleaved CRT) + 1 (sqfree) + 1 (mobius) = 202
     """
     ret = []
     count = len(primes_100)
 
-    # Vector length: 1 + 2*100 + 1 + 1 = 203
-    ret.append(f"V{1 + 2*count + 2}")
+    # Vector length: 2*100 + 1 + 1 = 202
+    ret.append(f"V{2*count + 2}")
 
-    # Add the number itself
-    ret.append(encode_integer(n))
-
-    # Add interleaved CRT representation
+    # Add interleaved CRT representation (without n at the beginning)
     for p in primes_100:
         ret.append(encode_integer(n % p))
         ret.append(encode_integer(p))
 
-    # Add square-free flag (1 if square-free, 0 otherwise)
-    sqfree_flag = is_squarefree(n)
+    # Add square-free flag: μ²(n) = 1 if square-free, 0 otherwise
+    mu = dldmobius(n)
+    sqfree_flag = mu * mu  # This is μ²(n): 1 if μ ≠ 0, else 0
     ret.append(encode_integer(sqfree_flag))
 
     # Add Möbius function value
-    mu = dldmobius(n)
     ret.append(encode_integer(mu))
 
     return ' '.join(ret)
@@ -273,7 +270,7 @@ ENCODING_FORMATS = {
     'CRT100': make_input_CRT100,
     'interCRT100_with_n': make_input_interCRT100_with_n,
     'CRT100_with_stats': make_input_CRT100_with_stats,
-    'n_interCRT_sqfree_mobius': make_input_n_interCRT_sqfree_mobius,
+    'interCRT_sqfree_mobius': make_input_interCRT_sqfree_mobius,
 }
 
 
@@ -371,19 +368,19 @@ def main():
 
     # Generate filenames with dataset type suffix
     base_mu_filename = get_output_filename(args.encoding, "mu")
-    base_musq_filename = get_output_filename(args.encoding, "musq")
+    # base_musq_filename = get_output_filename(args.encoding, "musq")  # Disabled for now
     # base_liouville_filename = get_output_filename(args.encoding, "lambda")  # Disabled for now
 
     # Add dataset type to filename (before .txt extension)
     mu_filename = os.path.join(encoding_dir, base_mu_filename.replace('.txt', f'_{args.dataset_type}.txt'))
-    musq_filename = os.path.join(encoding_dir, base_musq_filename.replace('.txt', f'_{args.dataset_type}.txt'))
+    # musq_filename = os.path.join(encoding_dir, base_musq_filename.replace('.txt', f'_{args.dataset_type}.txt'))  # Disabled for now
     # liouville_filename = os.path.join(encoding_dir, base_liouville_filename.replace('.txt', f'_{args.dataset_type}.txt'))  # Disabled for now
 
     # Check if files already exist
-    if os.path.exists(mu_filename) and os.path.exists(musq_filename):  # Removed liouville_filename check
+    if os.path.exists(mu_filename):  # Removed musq_filename and liouville_filename check
         print(f"Data files already exist for {args.encoding} with dataset type {args.dataset_type}:")
         print(f"  - {mu_filename}")
-        print(f"  - {musq_filename}")
+        # print(f"  - {musq_filename}")  # Disabled for now
         # print(f"  - {liouville_filename}")  # Disabled for now
         print("Skipping generation. Delete these files if you want to regenerate.")
         return
@@ -393,13 +390,13 @@ def main():
     print(f"Integer range: [{args.min_value}, {args.max_value}]")
     print(f"Output files:")
     print(f"  - {mu_filename}")
-    print(f"  - {musq_filename}")
+    # print(f"  - {musq_filename}")  # Disabled for now
     # print(f"  - {liouville_filename}")  # Disabled for now
 
     seen = set()
     with (
         open(mu_filename, "w", encoding="utf8") as mufile,
-        open(musq_filename, "w", encoding="utf8") as musqfile,
+        # open(musq_filename, "w", encoding="utf8") as musqfile,  # Disabled for now
         # open(liouville_filename, "w", encoding="utf8") as liouvillefile,  # Disabled for now
     ):
         if HAS_TQDM:
@@ -411,7 +408,7 @@ def main():
                     continue
                 seen.add(n)
                 mufile.write(make_line(input_encoder, make_output_mu, n))
-                musqfile.write(make_line(input_encoder, make_output_musq, n))
+                # musqfile.write(make_line(input_encoder, make_output_musq, n))  # Disabled for now
                 # liouvillefile.write(make_line(input_encoder, make_output_liouville, n))  # Disabled for now
                 pbar.update(1)
             pbar.close()
@@ -423,7 +420,7 @@ def main():
                     continue
                 seen.add(n)
                 mufile.write(make_line(input_encoder, make_output_mu, n))
-                musqfile.write(make_line(input_encoder, make_output_musq, n))
+                # musqfile.write(make_line(input_encoder, make_output_musq, n))  # Disabled for now
                 # liouvillefile.write(make_line(input_encoder, make_output_liouville, n))  # Disabled for now
 
                 # Progress indicator every 10,000 samples
@@ -446,10 +443,10 @@ def main():
         print("  Format: [n mod p₁, n mod p₂, ..., n mod p₁₀₀, x, k, parity(x)]")
         print("  where x = number of primes dividing n, k = 100, parity = x mod 2")
         print("  Vector length: 103")
-    elif args.encoding == 'n_interCRT_sqfree_mobius':
-        print("  Format: [n, n mod p₁, p₁, n mod p₂, p₂, ..., n mod p₁₀₀, p₁₀₀, sqfree_flag, μ(n)]")
-        print("  where sqfree_flag = 1 if n is square-free, 0 otherwise")
-        print("  Vector length: 203")
+    elif args.encoding == 'interCRT_sqfree_mobius':
+        print("  Format: [n mod p₁, p₁, n mod p₂, p₂, ..., n mod p₁₀₀, p₁₀₀, sqfree_flag, μ(n)]")
+        print("  where sqfree_flag = μ²(n) = 1 if n is square-free, 0 otherwise")
+        print("  Vector length: 202")
 
 
 if __name__ == "__main__":

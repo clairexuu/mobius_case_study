@@ -1,4 +1,4 @@
-ENCODING ?= n_interCRT_sqfree_mobius
+ENCODING ?= interCRT_sqfree_mobius
 DATASET_TYPE ?= natural
 NUM_SAMPLES ?= 1000000
 SEED ?= 42
@@ -7,41 +7,21 @@ SHELL := /bin/bash
 
 .PHONY: usage
 usage:
-	@echo "USAGE"
-	@echo "  make data [ENCODING=interCRT100] [DATASET_TYPE=natural] [NUM_SAMPLES=1000000] [SEED=42]"
-	@echo "    - Generates training data for the specified DATASET_TYPE"
-	@echo "    - ALWAYS generates test data for all three dataset types (natural, cheat, non_cheat)"
-	@echo ""
-	@echo "  make data_all [ENCODING=interCRT100] [NUM_SAMPLES=1000000] [SEED=42]"
-	@echo "    - Generates both training and test data for all three dataset types"
-	@echo ""
-	@echo "  make run [ENCODING=interCRT100]"
-	@echo "  make run-cpu [ENCODING=interCRT100]"
-	@echo ""
-	@echo "Available encodings:"
+	@echo "Encodings:"
 	@echo "  - interCRT100                : [n mod p, p, ...] (vec len: 200)"
 	@echo "  - CRT100                     : [n mod p, ...] (vec len: 100)"
-	@echo "  - interCRT100_with_n         : [n mod p, p, ..., n] (vec len: 201)"
 	@echo "  - CRT100_with_stats          : [n mod p, ..., x, k, parity] (vec len: 103)"
-	@echo "  - n_interCRT_sqfree_mobius   : [n, n mod p, p, ..., sqfree, μ(n)] (vec len: 203)"
+	@echo "  - interCRT_sqfree_mobius     : [n mod p, p, ..., μ²(n), μ(n)] (vec len: 202)"
 	@echo ""
-	@echo "Available dataset types:"
+	@echo "Dataset Types:"
 	@echo "  - natural    : uniform random [1, 10^13] (for train/test split)"
 	@echo "  - cheat      : only prime factors within first 100 primes (test only)"
 	@echo "  - non_cheat  : at least one prime factor outside first 100 primes (test only)"
 	@echo ""
-	@echo "Functions available:"
+	@echo "Functions:"
 	@echo "  - mu         : Möbius function μ(n) ∈ {-1, 0, 1}"
 	@echo "  - musq       : Squared Möbius μ²(n) ∈ {0, 1}"
 	@echo "  # lambda (Liouville) generation is currently disabled"
-	@echo ""
-	@echo "Examples:"
-	@echo "  make data ENCODING=interCRT100 DATASET_TYPE=natural SEED=42"
-	@echo "  make data ENCODING=n_interCRT_sqfree_mobius DATASET_TYPE=natural SEED=42"
-	@echo "  make data_all ENCODING=CRT100_with_stats NUM_SAMPLES=1000000 SEED=42"
-	@echo "  make train ENCODING=n_interCRT_sqfree_mobius DATASET_TYPE=natural"
-	@echo "  make train ENCODING=CRT100"
-	@echo "  make train ENCODING=CRT100_with_stats SEED=42"
 
 .PHONY: data
 data:
