@@ -1,4 +1,4 @@
-ENCODING ?= interCRT_sqfree_mobius
+ENCODING ?= interCRT_sqfree
 DATASET_TYPE ?= natural
 NUM_SAMPLES ?= 1000000
 SEED ?= 42
@@ -11,7 +11,7 @@ usage:
 	@echo "  - interCRT100                : [n mod p, p, ...] (vec len: 200)"
 	@echo "  - CRT100                     : [n mod p, ...] (vec len: 100)"
 	@echo "  - CRT100_with_stats          : [n mod p, ..., x, k, parity] (vec len: 103)"
-	@echo "  - interCRT_sqfree_mobius     : [n mod p, p, ..., μ²(n), μ(n)] (vec len: 202)"
+	@echo "  - interCRT_sqfree            : [n mod p, p, ..., μ²(n)] (vec len: 201)"
 	@echo ""
 	@echo "Dataset Types:"
 	@echo "  - natural    : uniform random [1, 10^13] (for train/test split)"

@@ -19,7 +19,7 @@ usage:
 	@echo "  - CRT100                     : [n mod p, ...] (vec len: 100)"
 	@echo "  - interCRT100_with_n         : [n mod p, p, ..., n] (vec len: 201)"
 	@echo "  - CRT100_with_stats          : [n mod p, ..., x, k, parity] (vec len: 103)"
-	@echo "  - n_interCRT_sqfree_mobius   : [n, n mod p, p, ..., sqfree, μ(n)] (vec len: 203)"
+	@echo "  - interCRT_sqfree            : [n mod p, p, ..., sqfree] (vec len: 201)"
 	@echo ""
 	@echo "Available dataset types:"
 	@echo "  - natural    : uniform random [1, 10^13] (for train/test split)"
@@ -34,9 +34,9 @@ usage:
 	@echo "Examples:"
 	@echo "  make good_data ENCODING=interCRT100 DATASET_TYPE=natural"
 	@echo "  make good_data ENCODING=CRT100 DATASET_TYPE=cheat NUM_SAMPLES=100000 SEED=42"
-	@echo "  make good_data ENCODING=n_interCRT_sqfree_mobius DATASET_TYPE=natural SEED=42"
+	@echo "  make good_data ENCODING=interCRT_sqfree DATASET_TYPE=natural SEED=42"
 	@echo "  make all_datasets ENCODING=CRT100_with_stats NUM_SAMPLES=1000000"
-	@echo "  make shuffle ENCODING=n_interCRT_sqfree_mobius DATASET_TYPE=natural"
+	@echo "  make shuffle ENCODING=interCRT_sqfree DATASET_TYPE=natural"
 	@echo "  make shuffle_all ENCODING=CRT100_with_stats"
 
 

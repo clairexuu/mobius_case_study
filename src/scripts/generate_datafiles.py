@@ -233,20 +233,19 @@ def make_input_CRT100_with_stats(n):
     return ' '.join(ret)
 
 
-def make_input_interCRT_sqfree_mobius(n):
+def make_input_interCRT_sqfree(n):
     """
-    New encoding format: [interleaving CRT | square free flag | mobius]
-    Format: [n mod p1, p1, n mod p2, p2, ..., n mod p100, p100, sqfree_flag, μ(n)]
+    New encoding format: [interleaving CRT | square free flag]
+    Format: [n mod p1, p1, n mod p2, p2, ..., n mod p100, p100, sqfree_flag]
     where sqfree_flag = 1 if n is square-free, 0 otherwise (computed as μ²(n))
-          μ(n) = Möbius function value ∈ {-1, 0, 1}
 
-    Vector length: 200 (interleaved CRT) + 1 (sqfree) + 1 (mobius) = 202
+    Vector length: 200 (interleaved CRT) + 1 (sqfree) = 201
     """
     ret = []
     count = len(primes_100)
 
-    # Vector length: 2*100 + 1 + 1 = 202
-    ret.append(f"V{2*count + 2}")
+    # Vector length: 2*100 + 1 = 201
+    ret.append(f"V{2*count + 1}")
 
     # Add interleaved CRT representation (without n at the beginning)
     for p in primes_100:
@@ -258,9 +257,6 @@ def make_input_interCRT_sqfree_mobius(n):
     sqfree_flag = mu * mu  # This is μ²(n): 1 if μ ≠ 0, else 0
     ret.append(encode_integer(sqfree_flag))
 
-    # Add Möbius function value
-    ret.append(encode_integer(mu))
-
     return ' '.join(ret)
 
 
@@ -270,7 +266,7 @@ ENCODING_FORMATS = {
     'CRT100': make_input_CRT100,
     'interCRT100_with_n': make_input_interCRT100_with_n,
     'CRT100_with_stats': make_input_CRT100_with_stats,
-    'interCRT_sqfree_mobius': make_input_interCRT_sqfree_mobius,
+    'interCRT_sqfree': make_input_interCRT_sqfree,
 }
 
 
@@ -443,10 +439,10 @@ def main():
         print("  Format: [n mod p₁, n mod p₂, ..., n mod p₁₀₀, x, k, parity(x)]")
         print("  where x = number of primes dividing n, k = 100, parity = x mod 2")
         print("  Vector length: 103")
-    elif args.encoding == 'interCRT_sqfree_mobius':
-        print("  Format: [n mod p₁, p₁, n mod p₂, p₂, ..., n mod p₁₀₀, p₁₀₀, sqfree_flag, μ(n)]")
+    elif args.encoding == 'interCRT_sqfree':
+        print("  Format: [n mod p₁, p₁, n mod p₂, p₂, ..., n mod p₁₀₀, p₁₀₀, sqfree_flag]")
         print("  where sqfree_flag = μ²(n) = 1 if n is square-free, 0 otherwise")
-        print("  Vector length: 202")
+        print("  Vector length: 201")
 
 
 if __name__ == "__main__":
