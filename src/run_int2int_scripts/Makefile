@@ -1,4 +1,4 @@
-ENCODING ?= interCRT100
+ENCODING ?= n_interCRT_sqfree_mobius
 DATASET_TYPE ?= natural
 NUM_SAMPLES ?= 1000000
 SEED ?= 42
@@ -74,6 +74,9 @@ train_all:
 	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING) natural"
 	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING) cheat"
 	bash -c "source /home/ziwen/miniconda3/etc/profile.d/conda.sh && conda activate $(CONDA_ENV) && bash int2int_mu.sh $(ENCODING) non_cheat"
+
+.PHONY: run
+run: data train
 
 .PHONY: run-cpu
 run-cpu: data
