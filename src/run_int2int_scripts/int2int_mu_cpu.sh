@@ -16,23 +16,36 @@ function abspath {
     fi
 }
 
-# Parse encoding parameter (default: interCRT100)
+# Parse parameters (defaults: interCRT100, natural, mobius)
 ENCODING=${1:-interCRT100}
 DATASET_TYPE=${2:-natural}
+FUNCTION=${3:-mobius}
+
+# Set function-specific prefix
+if [ "$FUNCTION" = "mobius" ]; then
+    FUNC_PREFIX="mu"
+    EXP_NAME="mu"
+elif [ "$FUNCTION" = "liouville" ]; then
+    FUNC_PREFIX="lambda"
+    EXP_NAME="lambda"
+else
+    echo "Unknown function: $FUNCTION"
+    exit 1
+fi
 
 # Set encoding-specific parameters
 if [ "$ENCODING" = "interCRT100" ]; then
     DATA_TYPES='int[200]:range(-1,2)'
-    BASE_FILENAME="mu_interCRT100"
+    BASE_FILENAME="${FUNC_PREFIX}_interCRT100"
 elif [ "$ENCODING" = "CRT100" ]; then
     DATA_TYPES='int[100]:range(-1,2)'
-    BASE_FILENAME="mu_CRT100"
+    BASE_FILENAME="${FUNC_PREFIX}_CRT100"
 elif [ "$ENCODING" = "interCRT100_with_n" ]; then
     DATA_TYPES='int[201]:range(-1,2)'
-    BASE_FILENAME="mu_interCRT100_with_n"
+    BASE_FILENAME="${FUNC_PREFIX}_interCRT100_with_n"
 elif [ "$ENCODING" = "CRT100_with_stats" ]; then
     DATA_TYPES='int[103]:range(-1,2)'
-    BASE_FILENAME="mu_CRT100_with_stats"
+    BASE_FILENAME="${FUNC_PREFIX}_CRT100_with_stats"
 else
     echo "Unknown encoding: $ENCODING"
     exit 1
@@ -43,9 +56,10 @@ TRAIN_FILE="${BASE_FILENAME}_${DATASET_TYPE}.txt.train"
 EVAL_FILE="${BASE_FILENAME}_${DATASET_TYPE}.txt.test"
 
 INPUT_DIR="../../input/input_dir_${ENCODING}_${DATASET_TYPE}"
-MODEL_DIR="../../models/model_${ENCODING}_${DATASET_TYPE}"
+MODEL_DIR="../../models/model_${ENCODING}_${DATASET_TYPE}_${FUNCTION}"
 
 echo "Training with encoding: $ENCODING (CPU mode)"
+echo "  Function: $FUNCTION"
 echo "  Dataset type: $DATASET_TYPE"
 echo "  Data types: $DATA_TYPES"
 echo "  Input directory: $INPUT_DIR"
@@ -53,10 +67,10 @@ echo "  Model directory: $MODEL_DIR"
 
 mkdir -p "$MODEL_DIR"
 
-# Use conda environment's Python directly
-PYTHON_BIN="${CONDA_PREFIX:-/home/ziwen/miniconda3/envs/DLNT}/bin/python"
+# Use virtual environment's Python directly
+PYTHON_BIN="${VIRTUAL_ENV:-../../venv}/bin/python"
 
 # Workaround for Intel VTune/JIT library issue
 export DISABLE_VTUNE=1
 
-$PYTHON_BIN ../../Int2Int/train.py --num_workers 0 --dump_path "`abspath ${MODEL_DIR}`" --exp_name mu --exp_id 1 --train_data "`abspath ${INPUT_DIR}/${TRAIN_FILE}`" --eval_data "`abspath ${INPUT_DIR}/${EVAL_FILE}`" --eval_size 10000 --epoch_size 50000 --operation data --data_types "$DATA_TYPES" --optimizer 'adam_inverse_sqrt,lr=0.00025' --max_epoch 201 --cpu True
+$PYTHON_BIN ../../Int2Int/train.py --num_workers 0 --dump_path "`abspath ${MODEL_DIR}`" --exp_name $EXP_NAME --exp_id 1 --train_data "`abspath ${INPUT_DIR}/${TRAIN_FILE}`" --eval_data "`abspath ${INPUT_DIR}/${EVAL_FILE}`" --eval_size 10000 --epoch_size 50000 --operation data --data_types "$DATA_TYPES" --optimizer 'adam_inverse_sqrt,lr=0.00025' --max_epoch 201 --cpu True

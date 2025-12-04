@@ -1,5 +1,5 @@
 """
-generate_corrupted_datafiles.py - make mobius datafiles for Int2Int
+generate_corrupted_datafiles.py - make datafiles for Int2Int
 
 This also makes datafiles with incorrect values at the primes 2 and 3.
 
@@ -33,9 +33,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
 import random
+import argparse
 
-
-from utils import dldmobius, encode_integer, primes_100
+from utils import dldmobius, dldliouville, encode_integer, primes_100
 
 
 def make_line(input_func, output_func, n):
@@ -94,64 +94,73 @@ def make_p_random_input_func(q):
     return inner
 
 
-def make_output(n):
+def make_output_mu(n):
     return str(dldmobius(n))
 
 
-def make_output_sq(n):
+def make_output_musq(n):
     return str(dldmobius(n)**2)
 
 
+def make_output_lambda(n):
+    return str(dldliouville(n))
+
+
+def make_output_lambdasq(n):
+    return str(dldliouville(n)**2)
+
+
 def main():
+    parser = argparse.ArgumentParser(
+        description='Generate corrupted datafiles for testing'
+    )
+    parser.add_argument(
+        '--function',
+        type=str,
+        default='mobius',
+        choices=['mobius', 'liouville'],
+        help='Arithmetic function to compute'
+    )
+    args = parser.parse_args()
+
+    if args.function == 'mobius':
+        output_func = make_output_mu
+        output_func_sq = make_output_musq
+        prefix = 'mu'
+    elif args.function == 'liouville':
+        output_func = make_output_lambda
+        output_func_sq = make_output_lambdasq
+        prefix = 'lambda'
+
     outdir = "../../input/"
     seen = set()
     with (
-        open(outdir + "mu_only23_correct.txt", "w", encoding="utf8") as mu23file,
-        open(outdir + "musq_only23_correct.txt", "w", encoding="utf8") as musq23file,
-        open(outdir + "mu_2_random.txt", "w", encoding="utf8") as mu2hatfile,
-        open(outdir + "musq_2_random.txt", "w", encoding="utf8") as musq2hatfile,
-        open(outdir + "mu_p_3_random.txt", "w", encoding="utf8") as mu3hatfile,
-        open(outdir + "musq_p_3_random.txt", "w", encoding="utf8") as musq3hatfile,
-        open(outdir + "mu_23_random.txt", "w", encoding="utf8") as mu23hatfile,
-        open(outdir + "musq_23_random.txt", "w", encoding="utf8") as musq23hatfile,
-        open(outdir + "mu_true.txt", "w", encoding="utf8") as mu23truefile,
-        open(outdir + "musq_true.txt", "w", encoding="utf8") as musq23truefile,
+        open(outdir + f"{prefix}_only23_correct.txt", "w", encoding="utf8") as f23,
+        open(outdir + f"{prefix}sq_only23_correct.txt", "w", encoding="utf8") as fsq23,
+        open(outdir + f"{prefix}_2_random.txt", "w", encoding="utf8") as f2hat,
+        open(outdir + f"{prefix}sq_2_random.txt", "w", encoding="utf8") as fsq2hat,
+        open(outdir + f"{prefix}_p_3_random.txt", "w", encoding="utf8") as f3hat,
+        open(outdir + f"{prefix}sq_p_3_random.txt", "w", encoding="utf8") as fsq3hat,
+        open(outdir + f"{prefix}_23_random.txt", "w", encoding="utf8") as f23hat,
+        open(outdir + f"{prefix}sq_23_random.txt", "w", encoding="utf8") as fsq23hat,
+        open(outdir + f"{prefix}_true.txt", "w", encoding="utf8") as ftrue,
+        open(outdir + f"{prefix}sq_true.txt", "w", encoding="utf8") as fsqtrue,
     ):
         while len(seen) < 10**5:
             n = random.randint(2, 10**13)
             if n in seen:
                 continue
             seen.add(n)
-            mu23file.write(
-                make_line(make_23_only_right_input, make_output, n)
-            )
-            musq23file.write(
-                make_line(make_23_only_right_input, make_output_sq, n)
-            )
-            mu2hatfile.write(
-                make_line(make_p_random_input_func(2), make_output, n)
-            )
-            musq2hatfile.write(
-                make_line(make_p_random_input_func(2), make_output_sq, n)
-            )
-            mu3hatfile.write(
-                make_line(make_p_random_input_func(3), make_output, n)
-            )
-            musq3hatfile.write(
-                make_line(make_p_random_input_func(3), make_output_sq, n)
-            )
-            mu23hatfile.write(
-                make_line(make_23_wrong_input, make_output, n)
-            )
-            musq23hatfile.write(
-                make_line(make_23_wrong_input, make_output_sq, n)
-            )
-            mu23truefile.write(
-                make_line(make_correct_input, make_output, n)
-            )
-            musq23truefile.write(
-                make_line(make_correct_input, make_output_sq, n)
-            )
+            f23.write(make_line(make_23_only_right_input, output_func, n))
+            fsq23.write(make_line(make_23_only_right_input, output_func_sq, n))
+            f2hat.write(make_line(make_p_random_input_func(2), output_func, n))
+            fsq2hat.write(make_line(make_p_random_input_func(2), output_func_sq, n))
+            f3hat.write(make_line(make_p_random_input_func(3), output_func, n))
+            fsq3hat.write(make_line(make_p_random_input_func(3), output_func_sq, n))
+            f23hat.write(make_line(make_23_wrong_input, output_func, n))
+            fsq23hat.write(make_line(make_23_wrong_input, output_func_sq, n))
+            ftrue.write(make_line(make_correct_input, output_func, n))
+            fsqtrue.write(make_line(make_correct_input, output_func_sq, n))
 
 
 if __name__ == "__main__":

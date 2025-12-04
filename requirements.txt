@@ -1,6 +1,7 @@
 # Core dependencies for PyTorch-based training
 torch>=1.7.0
 numpy>=1.19.0
+matplotlib>=3.5.0
 
 # Data processing and utilities
 argparse

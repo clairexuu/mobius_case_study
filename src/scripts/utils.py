@@ -31,6 +31,10 @@ dldlib = ctypes.CDLL(os.path.abspath('../mobius_code/mobius.so'))
 dldmobius = dldlib.mobius
 dldmobius.argtypes = [ctypes.c_longlong]
 
+dldlib_liouville = ctypes.CDLL(os.path.abspath('../mobius_code/liouville.so'))
+dldliouville = dldlib_liouville.liouville
+dldliouville.argtypes = [ctypes.c_longlong]
+
 
 def encode_integer(val, base=1000, digit_sep=" "):
     """integer -> Int2Int format"""
@@ -175,51 +179,38 @@ def is_squarefree(n):
     return 1
 
 
-def liouville(n):
+def wheel_liouville(n):
     """
-    Liouville function λ(n).
-    Returns (-1)^Ω(n) where Ω(n) is the number of prime factors with multiplicity.
-    λ(n) = 1 if Ω(n) is even, -1 if Ω(n) is odd.
+    Liouville using wheel-type factorization in pure python.
     """
     if n < 1:
         return 0
     if n == 1:
         return 1
-
-    omega = 0  # count prime factors with multiplicity
-
-    # Factor out 2s
+    omega = 0
     while n % 2 == 0:
         omega += 1
         n //= 2
-
-    # Factor out 3s
     while n % 3 == 0:
         omega += 1
         n //= 3
-
-    # Factor out 5s
     while n % 5 == 0:
         omega += 1
         n //= 5
 
-    # Check remaining primes using wheel
     incs = [4, 2, 4, 2, 4, 6, 2, 6]
     p = 7
     i = 0
-    limit = int(n**0.5 + 1)
-
+    limit = int(n**.5 + 1)
     while p <= limit:
         while n % p == 0:
             omega += 1
             n //= p
-            limit = int(n**0.5 + 1)
+            limit = int(n**.5 + 1)
         p += incs[i]
         i = (i + 1) % len(incs)
-
     if n > 1:
         omega += 1
-
     return 1 if omega % 2 == 0 else -1
 
 

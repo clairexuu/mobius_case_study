@@ -170,3 +170,7 @@ src/scripts/good_data_interCRT100_with_n_non_cheat
 src/scripts/shuffle_interCRT100_cheat
 src/scripts/shuffle_interCRT100_non_cheat
 GITHUB_Demo_Comment.txt
+
+#Other ignore
+.ssh
+.claude/

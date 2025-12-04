@@ -3,3 +3,5 @@ mu/
 musq/
 *.pth
 *.pkl
+lambda/
+lambdasq/

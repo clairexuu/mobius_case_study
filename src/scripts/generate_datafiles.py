@@ -41,7 +41,7 @@ except ImportError:
     HAS_TQDM = False
     print("Note: Install tqdm for progress bar support: pip install tqdm")
 
-from utils import dldmobius, encode_integer, primes_100, is_squarefree, liouville
+from utils import dldmobius, dldliouville, encode_integer, primes_100
 
 
 def make_line(inputfunc, outputfunc, n):
@@ -278,10 +278,12 @@ def make_output_musq(n):
     return str(dldmobius(n)**2)
 
 
-# NOTE: Liouville function generation is currently disabled
-# Uncomment below if you want to generate Liouville function data
-# def make_output_liouville(n):
-#     return str(liouville(n))
+def make_output_lambda(n):
+    return str(dldliouville(n))
+
+
+def make_output_lambdasq(n):
+    return str(dldliouville(n)**2)
 
 
 def get_output_filename(encoding_format, task):
@@ -339,6 +341,13 @@ def main():
         default=None,
         help='Random seed for reproducibility'
     )
+    parser.add_argument(
+        '--function',
+        type=str,
+        default='mobius',
+        choices=['mobius', 'liouville'],
+        help='Arithmetic function to compute'
+    )
 
     args = parser.parse_args()
 
@@ -362,38 +371,44 @@ def main():
     # Get encoding function
     input_encoder = ENCODING_FORMATS[args.encoding]
 
+    # Select output functions based on arithmetic function
+    if args.function == 'mobius':
+        output_func = make_output_mu
+        output_func_sq = make_output_musq
+        task_prefix = 'mu'
+    elif args.function == 'liouville':
+        output_func = make_output_lambda
+        output_func_sq = make_output_lambdasq
+        task_prefix = 'lambda'
+
     # Generate filenames with dataset type suffix
-    base_mu_filename = get_output_filename(args.encoding, "mu")
-    # base_musq_filename = get_output_filename(args.encoding, "musq")  # Disabled for now
-    # base_liouville_filename = get_output_filename(args.encoding, "lambda")  # Disabled for now
+    base_filename = get_output_filename(args.encoding, task_prefix)
+    base_sq_filename = get_output_filename(args.encoding, f"{task_prefix}sq")
 
     # Add dataset type to filename (before .txt extension)
-    mu_filename = os.path.join(encoding_dir, base_mu_filename.replace('.txt', f'_{args.dataset_type}.txt'))
-    # musq_filename = os.path.join(encoding_dir, base_musq_filename.replace('.txt', f'_{args.dataset_type}.txt'))  # Disabled for now
-    # liouville_filename = os.path.join(encoding_dir, base_liouville_filename.replace('.txt', f'_{args.dataset_type}.txt'))  # Disabled for now
+    output_filename = os.path.join(encoding_dir, base_filename.replace('.txt', f'_{args.dataset_type}.txt'))
+    output_sq_filename = os.path.join(encoding_dir, base_sq_filename.replace('.txt', f'_{args.dataset_type}.txt'))
 
     # Check if files already exist
-    if os.path.exists(mu_filename):  # Removed musq_filename and liouville_filename check
-        print(f"Data files already exist for {args.encoding} with dataset type {args.dataset_type}:")
-        print(f"  - {mu_filename}")
-        # print(f"  - {musq_filename}")  # Disabled for now
-        # print(f"  - {liouville_filename}")  # Disabled for now
+    if os.path.exists(output_filename) and os.path.exists(output_sq_filename):
+        print(f"Data files already exist for {args.encoding} with dataset type {args.dataset_type} and function {args.function}:")
+        print(f"  - {output_filename}")
+        print(f"  - {output_sq_filename}")
         print("Skipping generation. Delete these files if you want to regenerate.")
         return
 
     print(f"Generating {args.num_samples} samples with encoding: {args.encoding}")
+    print(f"Function: {args.function}")
     print(f"Dataset type: {args.dataset_type}")
     print(f"Integer range: [{args.min_value}, {args.max_value}]")
     print(f"Output files:")
-    print(f"  - {mu_filename}")
-    # print(f"  - {musq_filename}")  # Disabled for now
-    # print(f"  - {liouville_filename}")  # Disabled for now
+    print(f"  - {output_filename}")
+    print(f"  - {output_sq_filename}")
 
     seen = set()
     with (
-        open(mu_filename, "w", encoding="utf8") as mufile,
-        # open(musq_filename, "w", encoding="utf8") as musqfile,  # Disabled for now
-        # open(liouville_filename, "w", encoding="utf8") as liouvillefile,  # Disabled for now
+        open(output_filename, "w", encoding="utf8") as outfile,
+        open(output_sq_filename, "w", encoding="utf8") as outsqfile,
     ):
         if HAS_TQDM:
             # Use tqdm progress bar
@@ -403,9 +418,8 @@ def main():
                 if n in seen:
                     continue
                 seen.add(n)
-                mufile.write(make_line(input_encoder, make_output_mu, n))
-                # musqfile.write(make_line(input_encoder, make_output_musq, n))  # Disabled for now
-                # liouvillefile.write(make_line(input_encoder, make_output_liouville, n))  # Disabled for now
+                outfile.write(make_line(input_encoder, output_func, n))
+                outsqfile.write(make_line(input_encoder, output_func_sq, n))
                 pbar.update(1)
             pbar.close()
         else:
@@ -415,9 +429,8 @@ def main():
                 if n in seen:
                     continue
                 seen.add(n)
-                mufile.write(make_line(input_encoder, make_output_mu, n))
-                # musqfile.write(make_line(input_encoder, make_output_musq, n))  # Disabled for now
-                # liouvillefile.write(make_line(input_encoder, make_output_liouville, n))  # Disabled for now
+                outfile.write(make_line(input_encoder, output_func, n))
+                outsqfile.write(make_line(input_encoder, output_func_sq, n))
 
                 # Progress indicator every 10,000 samples
                 if len(seen) % 10000 == 0:

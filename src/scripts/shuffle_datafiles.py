@@ -73,41 +73,57 @@ def main():
         default=100000,
         help='Number of test samples'
     )
+    parser.add_argument(
+        '--function',
+        type=str,
+        default='mobius',
+        choices=['mobius', 'liouville'],
+        help='Arithmetic function to process'
+    )
 
     args = parser.parse_args()
+
+    # Set function-specific prefixes
+    if args.function == 'mobius':
+        prefix = 'mu'
+        prefix_sq = 'musq'
+    elif args.function == 'liouville':
+        prefix = 'lambda'
+        prefix_sq = 'lambdasq'
 
     # Create encoding-specific subdirectory with dataset type
     encoding_dir = os.path.join(args.input_dir, f"input_dir_{args.encoding}_{args.dataset_type}")
     os.makedirs(encoding_dir, exist_ok=True)
 
     # Generate filenames based on encoding and dataset type
-    base_mu = f"mu_{args.encoding}"
-    # base_musq = f"musq_{args.encoding}"  # Disabled for now
+    base_func = f"{prefix}_{args.encoding}"
+    base_func_sq = f"{prefix_sq}_{args.encoding}"
 
     # Add dataset type suffix
-    mu_filename = os.path.join(encoding_dir, f"{base_mu}_{args.dataset_type}.txt")
-    # musq_filename = os.path.join(encoding_dir, f"{base_musq}_{args.dataset_type}.txt")  # Disabled for now
+    func_filename = os.path.join(encoding_dir, f"{base_func}_{args.dataset_type}.txt")
+    func_sq_filename = os.path.join(encoding_dir, f"{base_func_sq}_{args.dataset_type}.txt")
 
     print(f"Shuffling and splitting data with encoding: {args.encoding}")
+    print(f"Function: {args.function}")
     print(f"Dataset type: {args.dataset_type}")
 
     # All dataset types: create train/test split
     print(f"  Training samples: {args.ntrain}")
     print(f"  Test samples: {args.ntest}")
 
-    # Process mu files
-    if os.path.exists(mu_filename):
-        print(f"\nProcessing: {mu_filename}")
-        shuffle_and_create(mu_filename, args.ntrain, args.ntest)
+    # Process function files
+    if os.path.exists(func_filename):
+        print(f"\nProcessing: {func_filename}")
+        shuffle_and_create(func_filename, args.ntrain, args.ntest)
     else:
-        print(f"Warning: {mu_filename} not found!")
+        print(f"Warning: {func_filename} not found!")
 
-    # Process musq files - Disabled for now
-    # if os.path.exists(musq_filename):
-    #     print(f"\nProcessing: {musq_filename}")
-    #     shuffle_and_create(musq_filename, args.ntrain, args.ntest)
-    # else:
-    #     print(f"Warning: {musq_filename} not found!")
+    # Process function squared files
+    if os.path.exists(func_sq_filename):
+        print(f"\nProcessing: {func_sq_filename}")
+        shuffle_and_create(func_sq_filename, args.ntrain, args.ntest)
+    else:
+        print(f"Warning: {func_sq_filename} not found!")
 
     print("\nDone!")
 

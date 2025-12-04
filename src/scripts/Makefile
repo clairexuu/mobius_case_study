@@ -1,18 +1,23 @@
 PYTHON = python3
 ENCODING ?= interCRT100
 DATASET_TYPE ?= natural
+FUNCTION ?= mobius
 NUM_SAMPLES ?= 1000000
 SEED ?= 42
 
 .PHONY: usage
 usage:
 	@echo "USAGE"
-	@echo "  good_data [ENCODING=interCRT100] [DATASET_TYPE=natural] [NUM_SAMPLES=1000000] [SEED=42]"
-	@echo "  all_datasets [ENCODING=interCRT100] [NUM_SAMPLES=1000000] [SEED=42]"
-	@echo "  corrupted_data"
+	@echo "  good_data [ENCODING=interCRT100] [DATASET_TYPE=natural] [FUNCTION=mobius] [NUM_SAMPLES=1000000] [SEED=42]"
+	@echo "  all_datasets [ENCODING=interCRT100] [FUNCTION=mobius] [NUM_SAMPLES=1000000] [SEED=42]"
+	@echo "  corrupted_data [FUNCTION=mobius]"
 	@echo "  shuffle [ENCODING=interCRT100] [DATASET_TYPE=natural]"
 	@echo "  shuffle_all [ENCODING=interCRT100]"
 	@echo "  clean"
+	@echo ""
+	@echo "Available functions:"
+	@echo "  - mobius     : Möbius function μ(n) ∈ {-1, 0, 1}"
+	@echo "  - liouville  : Liouville function λ(n) ∈ {-1, 1}"
 	@echo ""
 	@echo "Available encodings:"
 	@echo "  - interCRT100                : [n mod p, p, ...] (vec len: 200)"
@@ -29,57 +34,58 @@ usage:
 	@echo "Output files generated:"
 	@echo "  - mu_*.txt      : Möbius function μ(n) ∈ {-1, 0, 1}"
 	@echo "  - musq_*.txt    : Squared Möbius μ²(n) ∈ {0, 1} (square-free indicator)"
-	@echo "  # lambda_*.txt generation is currently disabled"
+	@echo "  - lambda_*.txt  : Liouville function λ(n) ∈ {-1, 1}"
 	@echo ""
 	@echo "Examples:"
-	@echo "  make good_data ENCODING=interCRT100 DATASET_TYPE=natural"
-	@echo "  make good_data ENCODING=CRT100 DATASET_TYPE=cheat NUM_SAMPLES=100000 SEED=42"
-	@echo "  make good_data ENCODING=interCRT_sqfree DATASET_TYPE=natural SEED=42"
-	@echo "  make all_datasets ENCODING=CRT100_with_stats NUM_SAMPLES=1000000"
-	@echo "  make shuffle ENCODING=interCRT_sqfree DATASET_TYPE=natural"
-	@echo "  make shuffle_all ENCODING=CRT100_with_stats"
+	@echo "  make good_data ENCODING=interCRT100 DATASET_TYPE=natural FUNCTION=mobius"
+	@echo "  make good_data ENCODING=CRT100 DATASET_TYPE=cheat FUNCTION=liouville NUM_SAMPLES=100000"
+	@echo "  make all_datasets ENCODING=CRT100_with_stats FUNCTION=liouville NUM_SAMPLES=1000000"
+	@echo "  make corrupted_data FUNCTION=liouville"
 
 
-.PHONY: mobius
-mobius:
-	make -C ../mobius_code mobius.so
+.PHONY: compile
+compile:
+	make -C ../mobius_code all
 
-good_data_$(ENCODING)_$(DATASET_TYPE): mobius
+good_data_$(ENCODING)_$(DATASET_TYPE)_$(FUNCTION): compile
 	mkdir -p ../../input
-	$(PYTHON) generate_datafiles.py --encoding $(ENCODING) --dataset_type $(DATASET_TYPE) --num_samples $(NUM_SAMPLES) $(if $(SEED),--seed $(SEED))
-	touch good_data_$(ENCODING)_$(DATASET_TYPE)
+	$(PYTHON) generate_datafiles.py --encoding $(ENCODING) --dataset_type $(DATASET_TYPE) --function $(FUNCTION) --num_samples $(NUM_SAMPLES) $(if $(SEED),--seed $(SEED))
+	touch good_data_$(ENCODING)_$(DATASET_TYPE)_$(FUNCTION)
 
 .PHONY: good_data
-good_data: good_data_$(ENCODING)_$(DATASET_TYPE)
+good_data: good_data_$(ENCODING)_$(DATASET_TYPE)_$(FUNCTION)
 
 .PHONY: all_datasets
-all_datasets: mobius
-	@echo "Generating all dataset types for encoding: $(ENCODING)"
-	$(PYTHON) generate_datafiles.py --encoding $(ENCODING) --dataset_type natural --num_samples $(NUM_SAMPLES) $(if $(SEED),--seed $(SEED))
-	$(PYTHON) generate_datafiles.py --encoding $(ENCODING) --dataset_type cheat --num_samples $(NUM_SAMPLES) $(if $(SEED),--seed $(SEED))
-	$(PYTHON) generate_datafiles.py --encoding $(ENCODING) --dataset_type non_cheat --num_samples $(NUM_SAMPLES) $(if $(SEED),--seed $(SEED))
-	@echo "Done generating all datasets for $(ENCODING)"
+all_datasets: compile
+	@echo "Generating all dataset types for encoding: $(ENCODING), function: $(FUNCTION)"
+	$(PYTHON) generate_datafiles.py --encoding $(ENCODING) --dataset_type natural --function $(FUNCTION) --num_samples $(NUM_SAMPLES) $(if $(SEED),--seed $(SEED))
+	$(PYTHON) generate_datafiles.py --encoding $(ENCODING) --dataset_type cheat --function $(FUNCTION) --num_samples $(NUM_SAMPLES) $(if $(SEED),--seed $(SEED))
+	$(PYTHON) generate_datafiles.py --encoding $(ENCODING) --dataset_type non_cheat --function $(FUNCTION) --num_samples $(NUM_SAMPLES) $(if $(SEED),--seed $(SEED))
+	@echo "Done generating all datasets for $(ENCODING), $(FUNCTION)"
+
+corrupted_data_$(FUNCTION): compile
+	mkdir -p ../../input
+	$(PYTHON) generate_corrupted_datafiles.py --function $(FUNCTION)
+	touch corrupted_data_$(FUNCTION)
+
+.PHONY: corrupted_data
+corrupted_data: corrupted_data_$(FUNCTION)
+
+shuffle: good_data_$(ENCODING)_$(DATASET_TYPE)_$(FUNCTION)
+	$(PYTHON) shuffle_datafiles.py --encoding $(ENCODING) --dataset_type $(DATASET_TYPE) --function $(FUNCTION)
+	touch shuffle_$(ENCODING)_$(DATASET_TYPE)_$(FUNCTION)
 
 .PHONY: shuffle_all
 shuffle_all:
-	@echo "Shuffling all dataset types for encoding: $(ENCODING)"
-	$(PYTHON) shuffle_datafiles.py --encoding $(ENCODING) --dataset_type natural
-	$(PYTHON) shuffle_datafiles.py --encoding $(ENCODING) --dataset_type cheat
-	$(PYTHON) shuffle_datafiles.py --encoding $(ENCODING) --dataset_type non_cheat
-	@echo "Done shuffling all datasets for $(ENCODING)"
-
-corrupted_data: mobius
-	mkdir -p ../../input
-	$(PYTHON) generate_corrupted_datafiles.py
-	touch corrupted_data
-
-shuffle: good_data_$(ENCODING)_$(DATASET_TYPE)
-	$(PYTHON) shuffle_datafiles.py --encoding $(ENCODING) --dataset_type $(DATASET_TYPE)
-	touch shuffle_$(ENCODING)_$(DATASET_TYPE)
+	@echo "Shuffling all dataset types for encoding: $(ENCODING), function: $(FUNCTION)"
+	$(PYTHON) shuffle_datafiles.py --encoding $(ENCODING) --dataset_type natural --function $(FUNCTION)
+	$(PYTHON) shuffle_datafiles.py --encoding $(ENCODING) --dataset_type cheat --function $(FUNCTION)
+	$(PYTHON) shuffle_datafiles.py --encoding $(ENCODING) --dataset_type non_cheat --function $(FUNCTION)
+	@echo "Done shuffling all datasets for $(ENCODING), $(FUNCTION)"
 
 .PHONY: clean
 clean:
 	rm -f good_data*
-	rm -f corrupted_data
+	rm -f corrupted_data*
 	rm -f shuffle*
 	rm -rf __pycache__/
