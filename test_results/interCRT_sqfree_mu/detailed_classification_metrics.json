@@ -1,0 +1,143 @@
+{
+  "natural": {
+    "precision_macro": 0.5033713974986406,
+    "recall_macro": 0.6666666666666666,
+    "f1_macro": 0.558532281876778,
+    "precision_weighted": 0.5465127079934747,
+    "recall_weighted": 0.6997,
+    "f1_weighted": 0.5982591336286054,
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        3003
+      ],
+      [
+        0,
+        3870,
+        0
+      ],
+      [
+        0,
+        0,
+        3127
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        \u03bc=-1       0.00      0.00      0.00      3003\n         \u03bc=0       1.00      1.00      1.00      3870\n         \u03bc=1       0.51      1.00      0.68      3127\n\n    accuracy                           0.70     10000\n   macro avg       0.50      0.67      0.56     10000\nweighted avg       0.55      0.70      0.60     10000\n",
+    "labels": [
+      -1,
+      0,
+      1
+    ],
+    "target_names": [
+      "\u03bc=-1",
+      "\u03bc=0",
+      "\u03bc=1"
+    ],
+    "n_valid_predictions": 10000,
+    "n_invalid_predictions": 0,
+    "precision_-1": 0.0,
+    "recall_-1": 0.0,
+    "f1_-1": 0.0,
+    "precision_0": 1.0,
+    "recall_0": 1.0,
+    "f1_0": 1.0,
+    "precision_1": 0.5101141924959217,
+    "recall_1": 1.0,
+    "f1_1": 0.6755968456303338
+  },
+  "cheat": {
+    "precision_macro": 0.48331697742885177,
+    "recall_macro": 0.6666666666666666,
+    "f1_macro": 0.5402143260011281,
+    "precision_weighted": 0.8374605004906771,
+    "recall_weighted": 0.8879,
+    "f1_weighted": 0.8531129610829102,
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        1121
+      ],
+      [
+        0,
+        7962,
+        0
+      ],
+      [
+        0,
+        0,
+        917
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        \u03bc=-1       0.00      0.00      0.00      1121\n         \u03bc=0       1.00      1.00      1.00      7962\n         \u03bc=1       0.45      1.00      0.62       917\n\n    accuracy                           0.89     10000\n   macro avg       0.48      0.67      0.54     10000\nweighted avg       0.84      0.89      0.85     10000\n",
+    "labels": [
+      -1,
+      0,
+      1
+    ],
+    "target_names": [
+      "\u03bc=-1",
+      "\u03bc=0",
+      "\u03bc=1"
+    ],
+    "n_valid_predictions": 10000,
+    "n_invalid_predictions": 0,
+    "precision_-1": 0.0,
+    "recall_-1": 0.0,
+    "f1_-1": 0.0,
+    "precision_0": 1.0,
+    "recall_0": 1.0,
+    "f1_0": 1.0,
+    "precision_1": 0.44995093228655547,
+    "recall_1": 1.0,
+    "f1_1": 0.6206429780033841
+  },
+  "non_cheat": {
+    "precision_macro": 0.5,
+    "recall_macro": 0.6666666666666666,
+    "f1_macro": 0.5555555555555555,
+    "precision_weighted": 0.54985,
+    "recall_weighted": 0.6999,
+    "f1_weighted": 0.5998666666666667,
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        3001
+      ],
+      [
+        0,
+        3998,
+        0
+      ],
+      [
+        0,
+        0,
+        3001
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        \u03bc=-1       0.00      0.00      0.00      3001\n         \u03bc=0       1.00      1.00      1.00      3998\n         \u03bc=1       0.50      1.00      0.67      3001\n\n    accuracy                           0.70     10000\n   macro avg       0.50      0.67      0.56     10000\nweighted avg       0.55      0.70      0.60     10000\n",
+    "labels": [
+      -1,
+      0,
+      1
+    ],
+    "target_names": [
+      "\u03bc=-1",
+      "\u03bc=0",
+      "\u03bc=1"
+    ],
+    "n_valid_predictions": 10000,
+    "n_invalid_predictions": 0,
+    "precision_-1": 0.0,
+    "recall_-1": 0.0,
+    "f1_-1": 0.0,
+    "precision_0": 1.0,
+    "recall_0": 1.0,
+    "f1_0": 1.0,
+    "precision_1": 0.5,
+    "recall_1": 1.0,
+    "f1_1": 0.6666666666666666
+  }
+}

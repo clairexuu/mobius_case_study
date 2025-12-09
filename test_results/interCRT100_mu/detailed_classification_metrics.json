@@ -1,0 +1,143 @@
+{
+  "natural": {
+    "precision_macro": 0.48575247714330055,
+    "recall_macro": 0.4865915233135929,
+    "f1_macro": 0.45511427198085846,
+    "precision_weighted": 0.4921777855866019,
+    "recall_weighted": 0.5223,
+    "f1_weighted": 0.47548930629740016,
+    "confusion_matrix": [
+      [
+        1189,
+        1406,
+        443
+      ],
+      [
+        108,
+        3507,
+        302
+      ],
+      [
+        1162,
+        1356,
+        527
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        \u03bc=-1       0.48      0.39      0.43      3038\n         \u03bc=0       0.56      0.90      0.69      3917\n         \u03bc=1       0.41      0.17      0.24      3045\n\n    accuracy                           0.52     10000\n   macro avg       0.49      0.49      0.46     10000\nweighted avg       0.49      0.52      0.48     10000\n",
+    "labels": [
+      -1,
+      0,
+      1
+    ],
+    "target_names": [
+      "\u03bc=-1",
+      "\u03bc=0",
+      "\u03bc=1"
+    ],
+    "n_valid_predictions": 10000,
+    "n_invalid_predictions": 0,
+    "precision_-1": 0.483529890199268,
+    "recall_-1": 0.39137590520079,
+    "f1_-1": 0.4325995997816991,
+    "precision_0": 0.5594193651300048,
+    "recall_0": 0.8953280571866225,
+    "f1_0": 0.6885921853524445,
+    "precision_1": 0.4143081761006289,
+    "recall_1": 0.17307060755336617,
+    "f1_1": 0.24415103080843178
+  },
+  "cheat": {
+    "precision_macro": 0.34313000809255517,
+    "recall_macro": 0.34201703552900614,
+    "f1_macro": 0.29189026394864953,
+    "precision_weighted": 0.6825822078077186,
+    "recall_weighted": 0.4254,
+    "f1_weighted": 0.5000093871184879,
+    "confusion_matrix": [
+      [
+        494,
+        423,
+        200
+      ],
+      [
+        3084,
+        3643,
+        1225
+      ],
+      [
+        504,
+        310,
+        117
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        \u03bc=-1       0.12      0.44      0.19      1117\n         \u03bc=0       0.83      0.46      0.59      7952\n         \u03bc=1       0.08      0.13      0.09       931\n\n    accuracy                           0.43     10000\n   macro avg       0.34      0.34      0.29     10000\nweighted avg       0.68      0.43      0.50     10000\n",
+    "labels": [
+      -1,
+      0,
+      1
+    ],
+    "target_names": [
+      "\u03bc=-1",
+      "\u03bc=0",
+      "\u03bc=1"
+    ],
+    "n_valid_predictions": 10000,
+    "n_invalid_predictions": 0,
+    "precision_-1": 0.12101910828025478,
+    "recall_-1": 0.4422560429722471,
+    "f1_-1": 0.1900365454895172,
+    "precision_0": 0.8324954296160878,
+    "recall_0": 0.45812374245472837,
+    "f1_0": 0.5910123296560675,
+    "precision_1": 0.07587548638132295,
+    "recall_1": 0.12567132116004295,
+    "f1_1": 0.09462191670036393
+  },
+  "non_cheat": {
+    "precision_macro": 0.4789999046872844,
+    "recall_macro": 0.4856162790851777,
+    "f1_macro": 0.4499505904784409,
+    "precision_weighted": 0.4854655660603976,
+    "recall_weighted": 0.52,
+    "f1_weighted": 0.46950514337743515,
+    "confusion_matrix": [
+      [
+        1201,
+        1378,
+        433
+      ],
+      [
+        83,
+        3519,
+        296
+      ],
+      [
+        1214,
+        1396,
+        480
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        \u03bc=-1       0.48      0.40      0.44      3012\n         \u03bc=0       0.56      0.90      0.69      3898\n         \u03bc=1       0.40      0.16      0.22      3090\n\n    accuracy                           0.52     10000\n   macro avg       0.48      0.49      0.45     10000\nweighted avg       0.49      0.52      0.47     10000\n",
+    "labels": [
+      -1,
+      0,
+      1
+    ],
+    "target_names": [
+      "\u03bc=-1",
+      "\u03bc=0",
+      "\u03bc=1"
+    ],
+    "n_valid_predictions": 10000,
+    "n_invalid_predictions": 0,
+    "precision_-1": 0.48078462770216174,
+    "recall_-1": 0.398738379814077,
+    "f1_-1": 0.435934664246824,
+    "precision_0": 0.559192753853488,
+    "recall_0": 0.9027706516162134,
+    "f1_0": 0.6906093612010598,
+    "precision_1": 0.3970223325062035,
+    "recall_1": 0.1553398058252427,
+    "f1_1": 0.22330774598743894
+  }
+}

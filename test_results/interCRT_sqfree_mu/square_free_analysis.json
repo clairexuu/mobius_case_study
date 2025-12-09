@@ -1,0 +1,91 @@
+{
+  "square_free": {
+    "n_samples": 6130,
+    "accuracy": 0.5101141924959217,
+    "confusion_matrix": [
+      [
+        0,
+        3003
+      ],
+      [
+        0,
+        3127
+      ]
+    ],
+    "confusion_matrix_normalized": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "labels": [
+      -1,
+      1
+    ],
+    "distribution_true": {
+      "-1": 3003,
+      "1": 3127
+    },
+    "distribution_pred": {
+      "-1": 0,
+      "0": 0,
+      "1": 6130
+    }
+  },
+  "non_square_free": {
+    "n_samples": 3870,
+    "accuracy": 1.0,
+    "n_violations": 0,
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        3870,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "confusion_matrix_normalized": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "labels": [
+      -1,
+      0,
+      1
+    ],
+    "distribution_true": {
+      "0": 3870
+    },
+    "distribution_pred": {
+      "-1": 0,
+      "0": 3870,
+      "1": 0
+    }
+  }
+}

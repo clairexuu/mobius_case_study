@@ -7,9 +7,6 @@ Int2Int/
 # input files
 input/
 
-# test logs
-test_results/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
