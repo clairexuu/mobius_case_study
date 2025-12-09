@@ -1,0 +1,38 @@
+{
+  "natural": {
+    "epoch": 0,
+    "valid_arithmetic_xe_loss": 0.6932066895484924,
+    "valid_arithmetic_acc": 49.87,
+    "valid_arithmetic_perfect": 49.87,
+    "valid_arithmetic_correct": 49.87,
+    "valid_arithmetic_acc_d1": 49.87,
+    "valid_arithmetic_acc_d2": 49.87,
+    "valid_arithmetic_acc_d3": 49.87,
+    "valid_arithmetic_acc_1": 0.0,
+    "valid_arithmetic_acc_100": 100.0
+  },
+  "cheat": {
+    "epoch": 0,
+    "valid_arithmetic_xe_loss": 0.6931414580345154,
+    "valid_arithmetic_acc": 50.25,
+    "valid_arithmetic_perfect": 50.25,
+    "valid_arithmetic_correct": 50.25,
+    "valid_arithmetic_acc_d1": 50.25,
+    "valid_arithmetic_acc_d2": 50.25,
+    "valid_arithmetic_acc_d3": 50.25,
+    "valid_arithmetic_acc_1": 0.0,
+    "valid_arithmetic_acc_100": 100.0
+  },
+  "non_cheat": {
+    "epoch": 0,
+    "valid_arithmetic_xe_loss": 0.6931757920265198,
+    "valid_arithmetic_acc": 50.05,
+    "valid_arithmetic_perfect": 50.05,
+    "valid_arithmetic_correct": 50.05,
+    "valid_arithmetic_acc_d1": 50.05,
+    "valid_arithmetic_acc_d2": 50.05,
+    "valid_arithmetic_acc_d3": 50.05,
+    "valid_arithmetic_acc_1": 0.0,
+    "valid_arithmetic_acc_100": 100.0
+  }
+}

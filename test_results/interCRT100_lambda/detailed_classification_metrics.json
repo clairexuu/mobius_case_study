@@ -1,0 +1,107 @@
+{
+  "natural": {
+    "precision_macro": 0.24935,
+    "recall_macro": 0.5,
+    "f1_macro": 0.33275505438046304,
+    "precision_weighted": 0.24870169,
+    "recall_weighted": 0.4987,
+    "f1_weighted": 0.33188989123907386,
+    "confusion_matrix": [
+      [
+        4987,
+        0
+      ],
+      [
+        5013,
+        0
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        \u03bb=-1       0.50      1.00      0.67      4987\n         \u03bb=1       0.00      0.00      0.00      5013\n\n    accuracy                           0.50     10000\n   macro avg       0.25      0.50      0.33     10000\nweighted avg       0.25      0.50      0.33     10000\n",
+    "labels": [
+      -1,
+      1
+    ],
+    "target_names": [
+      "\u03bb=-1",
+      "\u03bb=1"
+    ],
+    "n_valid_predictions": 10000,
+    "n_invalid_predictions": 0,
+    "precision_-1": 0.4987,
+    "recall_-1": 1.0,
+    "f1_-1": 0.6655101087609261,
+    "precision_1": 0.0,
+    "recall_1": 0.0,
+    "f1_1": 0.0
+  },
+  "cheat": {
+    "precision_macro": 0.25125,
+    "recall_macro": 0.5,
+    "f1_macro": 0.33444259567387685,
+    "precision_weighted": 0.25250624999999993,
+    "recall_weighted": 0.5025,
+    "f1_weighted": 0.33611480865224624,
+    "confusion_matrix": [
+      [
+        5025,
+        0
+      ],
+      [
+        4975,
+        0
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        \u03bb=-1       0.50      1.00      0.67      5025\n         \u03bb=1       0.00      0.00      0.00      4975\n\n    accuracy                           0.50     10000\n   macro avg       0.25      0.50      0.33     10000\nweighted avg       0.25      0.50      0.34     10000\n",
+    "labels": [
+      -1,
+      1
+    ],
+    "target_names": [
+      "\u03bb=-1",
+      "\u03bb=1"
+    ],
+    "n_valid_predictions": 10000,
+    "n_invalid_predictions": 0,
+    "precision_-1": 0.5025,
+    "recall_-1": 1.0,
+    "f1_-1": 0.6688851913477537,
+    "precision_1": 0.0,
+    "recall_1": 0.0,
+    "f1_1": 0.0
+  },
+  "non_cheat": {
+    "precision_macro": 0.25025,
+    "recall_macro": 0.5,
+    "f1_macro": 0.3335554815061646,
+    "precision_weighted": 0.25050025,
+    "recall_weighted": 0.5005,
+    "f1_weighted": 0.33388903698767075,
+    "confusion_matrix": [
+      [
+        5005,
+        0
+      ],
+      [
+        4995,
+        0
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        \u03bb=-1       0.50      1.00      0.67      5005\n         \u03bb=1       0.00      0.00      0.00      4995\n\n    accuracy                           0.50     10000\n   macro avg       0.25      0.50      0.33     10000\nweighted avg       0.25      0.50      0.33     10000\n",
+    "labels": [
+      -1,
+      1
+    ],
+    "target_names": [
+      "\u03bb=-1",
+      "\u03bb=1"
+    ],
+    "n_valid_predictions": 10000,
+    "n_invalid_predictions": 0,
+    "precision_-1": 0.5005,
+    "recall_-1": 1.0,
+    "f1_-1": 0.6671109630123292,
+    "precision_1": 0.0,
+    "recall_1": 0.0,
+    "f1_1": 0.0
+  }
+}

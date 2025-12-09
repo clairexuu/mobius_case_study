@@ -1,0 +1,4 @@
+test_fix/
+eval_dump/
+*.npz
+*.log

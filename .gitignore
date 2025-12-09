@@ -7,9 +7,6 @@ Int2Int/
 # input files
 input/
 
-# test logs
-test_results/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -174,3 +171,4 @@ GITHUB_Demo_Comment.txt
 #Other ignore
 .ssh
 .claude/
+notebooks/Fall25Poster.tex
